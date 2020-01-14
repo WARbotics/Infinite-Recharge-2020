@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
 import frc.robot.components.OI.DriveMode;
+import frc.robot.components.Intake;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -30,13 +31,13 @@ public class Robot extends TimedRobot {
   */
 
   
-  
+  private main.java.frc.robot.components.Intake intake;
   private Drivetrain drive;
   private OI input;
 
   @Override
   public void robotInit() {
-    
+    WPI_TalonSRX motor = new WPI_TalonSRX(0);
     WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
     WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
@@ -50,6 +51,7 @@ public class Robot extends TimedRobot {
     Joystick drive = new Joystick(0);
     Joystick operator = new Joystick(1);
     input = new OI(drive, operator);
+    intake = new Intake(motor);
   }
 
   @Override
@@ -102,7 +104,10 @@ public class Robot extends TimedRobot {
       // Default
       input.setDriveMode(DriveMode.DEFAULT);
     }
-    
+    if(input.drive.getRawButton(1)){
+    intake.on();
+
+    }
 
   }
 
