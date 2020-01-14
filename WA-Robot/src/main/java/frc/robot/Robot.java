@@ -29,19 +29,24 @@ public class Robot extends TimedRobot {
    * for any initialization code.
   */
 
+  
+  
   private Drivetrain drive;
   private OI input;
 
   @Override
   public void robotInit() {
-    WPI_TalonSRX leftLeader = new WPI_TalonSRX(1);
+    
+    WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
-    WPI_TalonSRX rightLeader = new WPI_TalonSRX(0);
-    WPI_VictorSPX rightFollower = new WPI_VictorSPX(0);
+    WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
+    WPI_TalonSRX rightFollower = new WPI_TalonSRX(2);
 
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
     drive = new Drivetrain(leftLeader, leftFollower, rightLeader, rightFollower);
+    
+
     Joystick drive = new Joystick(0);
     Joystick operator = new Joystick(1);
     input = new OI(drive, operator);
@@ -68,6 +73,8 @@ public class Robot extends TimedRobot {
     double driveY = -input.driver.getRawAxis(1);
     double zRotation = input.driver.getRawAxis(2);
     double rightDriveY = input.driver.getRawAxis(3);
+
+    
     if (input.getDriveMode() == DriveMode.SPEED) {
       // Speed
     } else if (input.getDriveMode() == DriveMode.PRECISION) {
@@ -95,6 +102,7 @@ public class Robot extends TimedRobot {
       // Default
       input.setDriveMode(DriveMode.DEFAULT);
     }
+    
 
   }
 

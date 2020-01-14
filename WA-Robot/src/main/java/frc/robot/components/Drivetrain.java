@@ -12,7 +12,7 @@ public class Drivetrain {
     private WPI_VictorSPX _leftFollower;
 
     private WPI_TalonSRX _rightLeader;
-    private WPI_VictorSPX _rightFollower;
+    private WPI_TalonSRX _rightFollower;
 
     private SpeedControllerGroup left, right;
     public DifferentialDrive drive;
@@ -23,7 +23,7 @@ public class Drivetrain {
     private double rotation = 0;
 
     public Drivetrain(WPI_TalonSRX leftLeadTalonSRX, WPI_VictorSPX leftFollowSPX, WPI_TalonSRX rightLeadSRX,
-            WPI_VictorSPX rightFollowSPX) {
+            WPI_TalonSRX rightFollowSPX) {
         this._leftLeader = leftLeadTalonSRX;
         this._leftFollower = leftFollowSPX;
         this.left = new SpeedControllerGroup(_leftLeader, _leftFollower);
