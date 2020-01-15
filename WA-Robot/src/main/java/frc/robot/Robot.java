@@ -106,8 +106,14 @@ public class Robot extends TimedRobot {
     }
     if(input.drive.getRawButton(1)){
     intake.on();
+    } else{
+      
+        intake.off();
+      
 
     }
+
+    
 
   }
 
