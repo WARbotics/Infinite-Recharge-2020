@@ -32,10 +32,10 @@ public class Robot extends TimedRobot {
   */
 
   
-  private main.java.frc.robot.components.Intake intake;
+  private frc.robot.components.Intake intake;
   private Drivetrain drive;
   private OI input;
-  private main.java.frc.components.Conveyor conveyor;
+  private frc.robot.components.Conveyor conveyor;
 
   @Override
   public void robotInit() {
@@ -79,6 +79,7 @@ public class Robot extends TimedRobot {
     double driveY = -input.driver.getRawAxis(1);
     double zRotation = input.driver.getRawAxis(2);
     double rightDriveY = input.driver.getRawAxis(3);
+    
 
     
     if (input.getDriveMode() == DriveMode.SPEED) {
@@ -108,7 +109,7 @@ public class Robot extends TimedRobot {
       // Default
       input.setDriveMode(DriveMode.DEFAULT);
     }
-    if(input.drive.getRawButton(1)){
+    if(input.driver.getRawButton(1)){
     intake.on();
     } else{
       
@@ -117,12 +118,12 @@ public class Robot extends TimedRobot {
 
     }
 
-    if(input.dribe.getRawButton(1)){
+    if(input.driver.getRawButton(1)){
       conveyor.on();
     }else{
       intake.off();
     }
-    if(input.drive.getRawButton(2)){
+    if(input.driver.getRawButton(2)){
       conveyor.backwards();
     }else{
       conveyor.off();

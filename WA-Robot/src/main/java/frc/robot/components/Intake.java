@@ -1,4 +1,4 @@
-package main.java.frc.robot.components;
+package frc.robot.components;
 
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
