@@ -1,22 +1,17 @@
 package frc.robot.components;
+import java.lang.Math;
 
-import java.lang.Math.*;
-
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Shooter {
 
-    private WPI_TalonSRX shooterLeft, shooterRight;
+    /*private WPI_TalonSRX shooterLeft, shooterRight;*/
     private TalonSRX magEncoderLeft, magEncoderRight;
-    private Double motionErrorLeft = 0.0;
-    private Double motionErrorRight = 0.0;
+    private int motionErrorLeft = 0;
+    private int motionErrorRight = 0;
     private String encoderError = "None";
     //Assume the radius is 3.5;
     private static final double RADIUS = 3.5;
@@ -26,13 +21,11 @@ public class Shooter {
     private static final int MAX_VAL = 0x3f3f3f3f;
     private static final double SHOOTER_CONSTANT = 23.57;
 
-    public Shooter(WPI_TalonSRX shooterLeft, WPI_TalonSRX shooterRight) {
-        this.shooterLeft = shooterLeft;
-        this.shooterRight = shooterRight;
+    public Shooter(int portLeft, int portRight) {
        
         //Set up Mag Encoders
-        magEncoderLeft = new TalonSRX(this.shooterLeft);
-        magEncoderRight = new TalonSRX(this.shooterRight);
+        magEncoderLeft = new TalonSRX(portLeft);
+        magEncoderRight = new TalonSRX(portRight);
         magEncoderLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         magEncoderRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         magEncoderLeft.setInverted(false);
@@ -55,7 +48,7 @@ public class Shooter {
         magEncoderRight.configReverseSoftLimitEnable(false, 0);
     }
 
-    private double convertToVelocity(doubel rpm) {
+    private double convertToVelocity(double rpm) {
         return (rpm * Math.PI * 2 * RADIUS);
     }
 
@@ -81,7 +74,7 @@ public class Shooter {
     }
 
     public void runMotor(double val) {
-        this.setSpeed(val);
+        this.runSpeed(val);
     }
 
     public void resetEncoders() {
@@ -93,10 +86,10 @@ public class Shooter {
         double leftLimit = -1.0;
         double rightLimit = 1.0;
         double middle = (leftLimit + rightLimit) / 2;
-        magEncoderLeft.set(middle);
-        magEncoderRight.set(middle);
+        magEncoderLeft.set(ControlMode.PercentOutput, middle);
+        magEncoderRight.set(ControlMode.PercentOutput, middle);
         while (true) {
-            if (left > right) {
+            if (leftLimit > rightLimit) {
                 return false;
             }
             double diff = speed - this.getVelocity();
@@ -113,9 +106,13 @@ public class Shooter {
             else if (Math.abs(diff) < 0.01) {
                 return true;
             }
-            magEncoderLeft.set(middle);
-            magEncoderRight.set(middle);
+            magEncoderLeft.set(ControlMode.PercentOutput, middle);
+            magEncoderRight.set(ControlMode.PercentOutput, middle);
         } 
+    }
+
+    public double getEncoder() {
+        return magEncoderLeft.getSelectedSensorPosition(0) / SHOOTER_CONSTANT;
     }
 
     public void setMotionMagicSetpoint(double setpoint, int cruiseVelocity, double secsToMaxSpeed) {
@@ -136,7 +133,7 @@ public class Shooter {
           magEncoderRight.configMotionAcceleration((int)(MAX_VAL / secsToMaxSpeed), 0);
         }
   
-        runElevatorMotionMagic(setpoint * SHOOTER_CONSTANT);
+        this.runMotionMagic(setpoint * SHOOTER_CONSTANT);
     }
 
     public void runMotionMagic(double val){
@@ -145,5 +142,4 @@ public class Shooter {
         motionErrorLeft = magEncoderLeft.getClosedLoopError(0);
         motionErrorRight = magEncoderRight.getClosedLoopError(0);
     }
-
 }
