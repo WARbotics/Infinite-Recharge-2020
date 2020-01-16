@@ -122,8 +122,16 @@ public class Robot extends TimedRobot {
     }else{
       intake.off();
     }
+    if(input.drive.getRawButton(2)){
+      conveyor.backwards();
+    }else{
+      conveyor.off();
+    }
 
+  
+  
   }
+
 
   @Override
   public void testInit() {

@@ -16,4 +16,9 @@ public void off(){
     motorv.set(0);
 }
 
+public void backwards(){
+motorv.set(-1);
+}
+
+
 }
