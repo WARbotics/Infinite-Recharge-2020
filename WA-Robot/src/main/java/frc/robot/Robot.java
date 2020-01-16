@@ -16,6 +16,7 @@ import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
 import frc.robot.components.OI.DriveMode;
 import frc.robot.components.Intake;
+import frc.robot.components.Conveyor;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,6 +35,7 @@ public class Robot extends TimedRobot {
   private main.java.frc.robot.components.Intake intake;
   private Drivetrain drive;
   private OI input;
+  private main.java.frc.components.Conveyor conveyor;
 
   @Override
   public void robotInit() {
@@ -42,6 +44,7 @@ public class Robot extends TimedRobot {
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
     WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
     WPI_TalonSRX rightFollower = new WPI_TalonSRX(2);
+    WPI_TalonSRX motorv = new WPI_TalonSRX(2);
 
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
@@ -52,6 +55,7 @@ public class Robot extends TimedRobot {
     Joystick operator = new Joystick(1);
     input = new OI(drive, operator);
     intake = new Intake(motor);
+    conveyor = new Conveyor(motorv);
   }
 
   @Override
@@ -113,7 +117,11 @@ public class Robot extends TimedRobot {
 
     }
 
-    
+    if(input.dribe.getRawButton(1)){
+      conveyor.on();
+    }else{
+      intake.off();
+    }
 
   }
 
