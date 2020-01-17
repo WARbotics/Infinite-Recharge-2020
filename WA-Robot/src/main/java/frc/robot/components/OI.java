@@ -25,5 +25,4 @@ public class OI {
 
         this.mode = mode;
     }
-
 }

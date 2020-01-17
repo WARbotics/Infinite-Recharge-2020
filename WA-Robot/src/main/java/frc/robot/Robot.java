@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
 import frc.robot.components.OI.DriveMode;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -33,14 +33,17 @@ public class Robot extends TimedRobot {
   
   private Drivetrain drive;
   private OI input;
-
+  WPI_TalonSRX leftLeader;
+  WPI_VictorSPX leftFollower;
+  WPI_TalonSRX rightLeader;
+  WPI_TalonSRX rightFollower;
   @Override
   public void robotInit() {
     
-    WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
-    WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
-    WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
-    WPI_TalonSRX rightFollower = new WPI_TalonSRX(2);
+    leftLeader = new WPI_TalonSRX(0);
+    leftFollower = new WPI_VictorSPX(1);
+    rightLeader = new WPI_TalonSRX(1);
+    rightFollower = new WPI_TalonSRX(2);
 
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
@@ -74,6 +77,7 @@ public class Robot extends TimedRobot {
     double zRotation = input.driver.getRawAxis(2);
     double rightDriveY = input.driver.getRawAxis(3);
 
+    SmartDashboard.putString("Drivemode", input.getDriveMode().name());
     
     if (input.getDriveMode() == DriveMode.SPEED) {
       // Speed
@@ -91,18 +95,20 @@ public class Robot extends TimedRobot {
         }
     }
 
-    // Set driver modes
-    if (input.driver.getRawButton(1)) {
-      // Set Speed Mode
-      input.setDriveMode(DriveMode.SPEED);
-    } else if (input.driver.getRawButton(2)) {
-      // Precision
-      input.setDriveMode(DriveMode.PRECISION);
-    } else if (input.driver.getRawButton(3)) {
-      // Default
-      input.setDriveMode(DriveMode.DEFAULT);
+    if(input.driver.getRawButton(1)){
+      leftLeader.set(.25);
+    }else if(input.driver.getRawButton(2)){
+      leftFollower.set(.25);
+    }else if(input.driver.getRawButton(3)){
+      rightLeader.set(.25);
+    }else if(input.driver.getRawButton(4)){
+      rightFollower.set(.25);
+    }else{
+      leftLeader.set(0);
+      leftFollower.set(0);
+      rightLeader.set(0);
+      rightFollower.set(0);
     }
-    
 
   }
 
