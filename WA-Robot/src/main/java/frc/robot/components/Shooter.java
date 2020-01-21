@@ -7,7 +7,13 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class Shooter {
-    
+    /*
+    *This shooter gets two WPI_TalonSRX passed inside the constructor, then initiates two mag encoders.
+    *This object has methods to get the rpm and the velocity of the mag encoders, and returns error if two mag encoders have different velocity or rpm.
+    *With Binary Search Method(Needs to be changed to PID methods), the shooter gets the speed that is required to shot the ball out
+    *There is a motion magic method to smoothly approach the velocity required.
+    *There is also a getter and setter method to get the state of the encoders.
+    */
     private WPI_TalonSRX magEncoderLeft, magEncoderRight;
     private int motionErrorLeft = 0;
     private int motionErrorRight = 0;
