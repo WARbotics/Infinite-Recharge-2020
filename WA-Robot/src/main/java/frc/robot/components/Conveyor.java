@@ -3,6 +3,14 @@ package frc.robot.components;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Conveyor{
+    /*
+    *Decription: This object spins two Talon SRX motors in the same direction to take
+    the power cell to the ball shooter. If need be, there belt can also go backwards.
+    *
+    *Contributed: Lily
+    *
+    *
+    */
  
     
     private ConveyorMode mode = ConveyorMode.OFF;

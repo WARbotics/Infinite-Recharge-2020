@@ -6,7 +6,13 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
     
 public class Intake{
-    
+    /*
+    * Description: This object uses a single Talon SRX that spins a motor to bring 
+    in a powercell to the conveyor belt.
+    *
+    *Contrubuted By: Lily
+    *
+    */
     private Boolean intakeRunning = false;
     
 
