@@ -45,6 +45,7 @@ public class Robot extends TimedRobot {
     WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
     WPI_TalonSRX rightFollower = new WPI_TalonSRX(2);
     WPI_TalonSRX motorv = new WPI_TalonSRX(2);
+    WPI_TalonSRX motorc = new WPI_TalonSRX(3);
 
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
@@ -55,7 +56,8 @@ public class Robot extends TimedRobot {
     Joystick operator = new Joystick(1);
     input = new OI(drive, operator);
     intake = new Intake(motor);
-    conveyor = new Conveyor(motorv);
+    conveyor = new Conveyor(motorv, motorc);
+    
   }
 
   @Override
@@ -109,6 +111,12 @@ public class Robot extends TimedRobot {
       // Default
       input.setDriveMode(DriveMode.DEFAULT);
     }
+    
+    
+    
+    
+    
+    
     if(input.driver.getRawButton(1)){
     intake.on();
     } else{
