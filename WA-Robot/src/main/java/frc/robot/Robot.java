@@ -32,20 +32,20 @@ public class Robot extends TimedRobot {
   */
 
   
-  private frc.robot.components.Intake intake;
+  private frc.robot.components.Intake Intake;
   private Drivetrain drive;
   private OI input;
   private frc.robot.components.Conveyor conveyor;
 
   @Override
   public void robotInit() {
-    WPI_TalonSRX motor = new WPI_TalonSRX(0);
+    WPI_TalonSRX intake = new WPI_TalonSRX(0);
     WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
     WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
     WPI_TalonSRX rightFollower = new WPI_TalonSRX(2);
-    WPI_TalonSRX motorv = new WPI_TalonSRX(2);
-    WPI_TalonSRX motorc = new WPI_TalonSRX(3);
+    WPI_TalonSRX frontConveyor = new WPI_TalonSRX(2);
+    WPI_TalonSRX backConveyor = new WPI_TalonSRX(3);
 
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
@@ -55,8 +55,8 @@ public class Robot extends TimedRobot {
     Joystick drive = new Joystick(0);
     Joystick operator = new Joystick(1);
     input = new OI(drive, operator);
-    intake = new Intake(motor);
-    conveyor = new Conveyor(motorv, motorc);
+    Intake = new Intake(intake);
+    conveyor = new Conveyor(frontConveyor, backConveyor);
     
   }
 
@@ -118,10 +118,10 @@ public class Robot extends TimedRobot {
     
     
     if(input.driver.getRawButton(1)){
-    intake.on();
+    Intake.on();
     } else{
       
-        intake.off();
+        Intake.off();
       
 
     }
@@ -129,7 +129,7 @@ public class Robot extends TimedRobot {
     if(input.driver.getRawButton(1)){
       conveyor.on();
     }else{
-      intake.off();
+      Intake.off();
     }
     if(input.driver.getRawButton(2)){
       conveyor.backwards();

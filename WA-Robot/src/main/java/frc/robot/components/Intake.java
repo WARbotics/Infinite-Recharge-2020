@@ -3,20 +3,31 @@ package frc.robot.components;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+
+    
 public class Intake{
+    
+    private Boolean intakeRunning = false;
+    
 
-private final WPI_TalonSRX motor;
-
-public Intake(final WPI_TalonSRX motor){
-    this.motor= motor;
+    private final WPI_TalonSRX intake;
+    public Intake(final WPI_TalonSRX intake){
+    this.intake= intake;
 
 }
+public Boolean isIntakeRunning(){
+    return intakeRunning;
+}
+
 public void on(){
-    motor.set(1);
+    intake.set(1);
+    intakeRunning = true;
+
 }
 
 public void off(){
-    motor.set(0);
+    intake.set(0);
+    intakeRunning = false;
 }
 
 
