@@ -7,25 +7,25 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class Shooter {
-
-    /*private WPI_TalonSRX shooterLeft, shooterRight;*/
-    private TalonSRX magEncoderLeft, magEncoderRight;
+    
+    private WPI_TalonSRX magEncoderLeft, magEncoderRight;
     private int motionErrorLeft = 0;
     private int motionErrorRight = 0;
     private String encoderError = "None";
     //Assume the radius is 3.5;
     private static final double RADIUS = 3.5;
+    private Boolean encoderOn = false;
     //Assume the maximum velocity is 9.8;
     private static final double maximumVelocity = 9.8;
     private static final int MAX_ACC = 0x3f3f3f3f;
     private static final int MAX_VAL = 0x3f3f3f3f;
     private static final double SHOOTER_CONSTANT = 23.57;
 
-    public Shooter(int portLeft, int portRight) {
+    public Shooter(WPI_TalonSRX motorLeft, WPI_TalonSRX motorRight) {
        
         //Set up Mag Encoders
-        magEncoderLeft = new TalonSRX(portLeft);
-        magEncoderRight = new TalonSRX(portRight);
+        magEncoderLeft = motorLeft;
+        magEncoderRight = motorRight;
         magEncoderLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         magEncoderRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         magEncoderLeft.setInverted(false);
@@ -74,7 +74,12 @@ public class Shooter {
     }
 
     public void runMotor(double val) {
-        this.runSpeed(val);
+        if (runSpeed(val)) {
+            encoderOn = true;
+            return;
+        } else {
+            encoderError = "Unable to Set the Speed";
+        }
     }
 
     public void resetEncoders() {
@@ -113,6 +118,14 @@ public class Shooter {
 
     public double getEncoder() {
         return magEncoderLeft.getSelectedSensorPosition(0) / SHOOTER_CONSTANT;
+    }
+
+    public Boolean encoderOn() {
+        return encoderOn;
+    }
+
+    public String getErrorType() {
+        return encoderError;
     }
 
     public void setMotionMagicSetpoint(double setpoint, int cruiseVelocity, double secsToMaxSpeed) {

@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -15,7 +16,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
 import frc.robot.components.OI.DriveMode;
-
+import frc.robot.components.Shooter;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -33,7 +34,7 @@ public class Robot extends TimedRobot {
   
   private Drivetrain drive;
   private OI input;
-
+  private Shooter shooter;
   @Override
   public void robotInit() {
     
@@ -41,11 +42,12 @@ public class Robot extends TimedRobot {
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
     WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
     WPI_TalonSRX rightFollower = new WPI_TalonSRX(2);
-
+    WPI_TalonSRX leftShooter = new WPI_TalonSRX(3);
+    WPI_TalonSRX rightShooter = new WPI_TalonSRX(4);
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
     drive = new Drivetrain(leftLeader, leftFollower, rightLeader, rightFollower);
-    
+    shooter = new Shooter(leftShooter, rightShooter);
 
     Joystick drive = new Joystick(0);
     Joystick operator = new Joystick(1);
@@ -94,15 +96,17 @@ public class Robot extends TimedRobot {
     // Set driver modes
     if (input.driver.getRawButton(1)) {
       // Set Speed Mode
-      input.setDriveMode(DriveMode.SPEED);
+      input.setDriveMode(DriveMode.SPEED);      
     } else if (input.driver.getRawButton(2)) {
       // Precision
       input.setDriveMode(DriveMode.PRECISION);
     } else if (input.driver.getRawButton(3)) {
       // Default
       input.setDriveMode(DriveMode.DEFAULT);
+    } else if (input.driver.getRawButton(4)) {
+      double speed = 114.5141919;//speed is equal to what vision processing outputs
+      shooter.runSpeed(speed);
     }
-    
 
   }
 
