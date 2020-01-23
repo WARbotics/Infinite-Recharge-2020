@@ -1,5 +1,6 @@
 package frc.robot.components;
 import java.lang.Math;
+import frc.robot.common.PID;
 
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -10,22 +11,16 @@ public class Shooter {
     /*
     *This shooter gets two WPI_TalonSRX passed inside the constructor, then initiates two mag encoders.
     *This object has methods to get the rpm and the velocity of the mag encoders, and returns error if two mag encoders have different velocity or rpm.
-    *With Binary Search Method(Needs to be changed to PID methods), the shooter gets the speed that is required to shot the ball out
-    *There is a motion magic method to smoothly approach the velocity required.
+    *With PID Method(Needs to be changed to PID methods), the shooter gets the speed that is required to shot the ball out
     *There is also a getter and setter method to get the state of the encoders.
     */
     private WPI_TalonSRX magEncoderLeft, magEncoderRight;
+    private PID shootet = new PID(0.30, 0.00, 0.01);
     private int motionErrorLeft = 0;
     private int motionErrorRight = 0;
     private String encoderError = "None";
-    //Assume the radius is 3.5;
-    private static final double RADIUS = 3.5;
-    private Boolean encoderOn = false;
-    //Assume the maximum velocity is 9.8;
-    private static final double maximumVelocity = 9.8;
-    private static final int MAX_ACC = 0x3f3f3f3f;
-    private static final int MAX_VAL = 0x3f3f3f3f;
-    private static final double SHOOTER_CONSTANT = 23.57;
+    private double deadBand = 0.0;
+    private Boolean encoderOn = false; 
 
     public Shooter(WPI_TalonSRX motorLeft, WPI_TalonSRX motorRight) {
        
@@ -41,17 +36,6 @@ public class Shooter {
         magEncoderRight.setSensorPhase(true);
         magEncoderLeft.setNeutralMode(NeutralMode.Brake);
         magEncoderRight.setNeutralMode(NeutralMode.Brake);
-        //For Motion Magic Velocity and Acceleration
-        //Assume the maximum acceleration and cruise velocity to be 0x3f3f3f3f
-        magEncoderLeft.configMotionAcceleration(MAX_ACC, 0);
-        magEncoderRight.configMotionAcceleration(MAX_ACC, 0);
-        magEncoderLeft.configMotionCruiseVelocity(MAX_VAL, 0);
-        magEncoderRight.configMotionCruiseVelocity(MAX_VAL, 0);
-        //Set Up Soft Limits (Does not need soft limit temporarily)
-        magEncoderLeft.configForwardSoftLimitEnable(false, 0);
-        magEncoderRight.configForwardSoftLimitEnable(false, 0);
-        magEncoderLeft.configReverseSoftLimitEnable(false, 0);
-        magEncoderRight.configReverseSoftLimitEnable(false, 0);
     }
 
     private double convertToVelocity(double rpm) {
@@ -65,35 +49,36 @@ public class Shooter {
 //secure the rpm values of two motors are same
     public double getVelocity() {
         while (magEncoderLeft.getSelectedSensorVelocity(0) != magEncoderRight.getSelectedSensorVelocity(0)) {
-            encoderError = "Two Velocity Not Same";
+            this.encoderError = "Two Velocity Not Same";
         }
-        encoderError = "None";
+        this.encoderError = "None";
         return magEncoderLeft.getSelectedSensorVelocity(0);
     }
 
-    public double getRpm() {
-        while (magEncoderLeft.getSelectedSensorPosition(0) != magEncoderRight.getSelectedSensorPosition(0)) {
-            encoderError = "Two Velocity Not Same";
-        }
-        encoderError = "None";
+    public double getPosition() {
         return magEncoderLeft.getSelectedSensorPosition(0);
     }
 
     public void runMotor(double val) {
-        if (runSpeed(val)) {
-            encoderOn = true;
-            return;
-        } else {
-            encoderError = "Unable to Set the Speed";
+        this.runSpeed(val));
+        this.encoderOn = true;
+    }
+
+    public void setDeadBand(double deadBand) {
+        this.deadBand = deadBand;
+    }
+
+    private void runSpeed(double speed) {
+        if (Math.abs(speed) <= this.deadBand) {
+            speed = 0;
         }
+        PID.setPoint(speed);
+        PID.setActual(this.getVelocity());
+        magEncoderLeft.set(ControlMode.PercentOutput, PID.getRate());
+        magEncoderRight.set(ControlMode.PercentOutput, PID.getRate());
     }
-
-    public void resetEncoders() {
-        magEncoderLeft.setSelectedSensorPosition(0, 0, 0);
-        magEncoderRight.setSelectedSensorPosition(0, 0, 0);
-    }
-
-    public Boolean runSpeed(double speed) {
+    
+    /*public void BinaryRunMotor(double speed) {
         double leftLimit = -1.0;
         double rightLimit = 1.0;
         double middle = (leftLimit + rightLimit) / 2;
@@ -119,46 +104,14 @@ public class Shooter {
             }
             magEncoderLeft.set(ControlMode.PercentOutput, middle);
             magEncoderRight.set(ControlMode.PercentOutput, middle);
-        } 
-    }
-
-    public double getEncoder() {
-        return magEncoderLeft.getSelectedSensorPosition(0) / SHOOTER_CONSTANT;
-    }
+        }
+    }*/
 
     public Boolean encoderOn() {
-        return encoderOn;
+        return this.encoderOn;
     }
 
     public String getErrorType() {
-        return encoderError;
-    }
-
-    public void setMotionMagicSetpoint(double setpoint, int cruiseVelocity, double secsToMaxSpeed) {
-        magEncoderLeft.configMotionCruiseVelocity(cruiseVelocity, 0);
-        magEncoderRight.configMotionCruiseVelocity(cruiseVelocity, 0);
-        //Assume setpoint limit is 70;
-        if (setpoint > 70){
-          secsToMaxSpeed = 0.6; 
-        }
-  
-        if ((this.getEncoder() > 50) && setpoint > this.getEncoder()){
-          //3 second acceleration at top
-          magEncoderLeft.configMotionAcceleration((int) ((MAX_VAL)/secsToMaxSpeed), 0);
-          magEncoderRight.configMotionAcceleration((int) ((MAX_VAL)/secsToMaxSpeed), 0); 
-        } else {
-          //regular acceleration
-          magEncoderLeft.configMotionAcceleration((int)(MAX_VAL / secsToMaxSpeed), 0);
-          magEncoderRight.configMotionAcceleration((int)(MAX_VAL / secsToMaxSpeed), 0);
-        }
-  
-        this.runMotionMagic(setpoint * SHOOTER_CONSTANT);
-    }
-
-    public void runMotionMagic(double val){
-        magEncoderLeft.set(ControlMode.MotionMagic, val);
-        magEncoderRight.set(ControlMode.MotionMagic, val);
-        motionErrorLeft = magEncoderLeft.getClosedLoopError(0);
-        motionErrorRight = magEncoderRight.getClosedLoopError(0);
+        return this.encoderError;
     }
 }
