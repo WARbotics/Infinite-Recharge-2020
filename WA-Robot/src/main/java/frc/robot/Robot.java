@@ -104,8 +104,8 @@ public class Robot extends TimedRobot {
       // Default
       input.setDriveMode(DriveMode.DEFAULT);
     } else if (input.driver.getRawButton(4)) {
-      double speed = 114.5141919;//speed is equal to what vision processing outputs
-      shooter.runSpeed(speed);
+      int speed = 5;//speed is equal to what vision processing outputs
+      shooter.runMotor(speed);
     }
 
   }

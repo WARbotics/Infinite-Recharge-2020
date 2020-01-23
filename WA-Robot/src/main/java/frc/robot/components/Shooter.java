@@ -15,12 +15,14 @@ public class Shooter {
     *There is also a getter and setter method to get the state of the encoders.
     */
     private WPI_TalonSRX magEncoderLeft, magEncoderRight;
-    private PID shootet = new PID(0.30, 0.00, 0.01);
+    private PID PID = new PID(0.30, 0.00, 0.01);
     private int motionErrorLeft = 0;
     private int motionErrorRight = 0;
     private String encoderError = "None";
     private double deadBand = 0.0;
     private Boolean encoderOn = false; 
+    //Assume the radius of the shooter wheel is 3.1415926
+    private static final double RADIUS = 3.1415926;
 
     public Shooter(WPI_TalonSRX motorLeft, WPI_TalonSRX motorRight) {
        
@@ -59,8 +61,8 @@ public class Shooter {
         return magEncoderLeft.getSelectedSensorPosition(0);
     }
 
-    public void runMotor(double val) {
-        this.runSpeed(val));
+    public void runMotor(int val) {
+        this.runSpeed(val);
         this.encoderOn = true;
     }
 
@@ -68,7 +70,7 @@ public class Shooter {
         this.deadBand = deadBand;
     }
 
-    private void runSpeed(double speed) {
+    private void runSpeed(int speed) {
         if (Math.abs(speed) <= this.deadBand) {
             speed = 0;
         }
