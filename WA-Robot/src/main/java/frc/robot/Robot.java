@@ -118,19 +118,16 @@ public class Robot extends TimedRobot {
     
     
       if(input.driver.getRawButton(1)){
-    intake.on();
+        intake.on();
+        conveyor.on();
     } else{
       
         intake.off();
+        conveyor.off();
       
 
     }
 
-    if(input.driver.getRawButton(1)){
-      conveyor.on();
-    }else{
-      intake.off();
-    }
     if(input.driver.getRawButton(2)){
       conveyor.backwards();
     }else{
