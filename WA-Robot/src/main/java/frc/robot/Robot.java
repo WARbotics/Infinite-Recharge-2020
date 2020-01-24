@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
 import frc.robot.components.OI.DriveMode;
-
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,7 +36,10 @@ public class Robot extends TimedRobot {
   
   private Drivetrain drive;
   private OI input;
-
+  NetworkTable table;
+  NetworkTableEntry targetX;
+  NetworkTableEntry targetY;
+  
   @Override
   public void robotInit() {
     WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
