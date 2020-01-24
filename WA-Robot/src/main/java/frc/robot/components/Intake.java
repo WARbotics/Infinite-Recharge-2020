@@ -1,14 +1,14 @@
 package frc.robot.components;
 
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+    import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 
     
 public class Intake{
     /*
     * Description: This object uses a single Talon SRX that spins a motor to bring 
-    in a powercell to the conveyor belt.
+    *in a powercell to the conveyor belt.
     *
     *Contrubuted By: Lily
     *
