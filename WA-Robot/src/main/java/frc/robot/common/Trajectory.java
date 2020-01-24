@@ -6,7 +6,7 @@ package frc.robot.common;
 public class Trajectory{ 
     /*
         This object calculates the trajectory for a fixed angle shooter.
-        Note: The equation becomes imagengery if the kX < [13.271, 0] and the kY and kX are in meter 
+        Note: The equation becomes imagengery if the kX > 13.271 and the kY and kX are in meter 
 
         Contributed by: Victor Henriksson
     */

@@ -16,6 +16,7 @@ import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
 import frc.robot.components.OI.DriveMode;
 
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -36,7 +37,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    
     WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
     WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
@@ -74,7 +74,6 @@ public class Robot extends TimedRobot {
     double zRotation = input.driver.getRawAxis(2);
     double rightDriveY = input.driver.getRawAxis(3);
 
-    
     if (input.getDriveMode() == DriveMode.SPEED) {
       // Speed
     } else if (input.getDriveMode() == DriveMode.PRECISION) {
