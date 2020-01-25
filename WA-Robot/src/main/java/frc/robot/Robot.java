@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
 import frc.robot.components.OI.DriveMode;
+import frc.robot.components.Intake;
+import frc.robot.components.Conveyor;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -33,19 +35,27 @@ public class Robot extends TimedRobot {
   */
 
   
-  
+  private Intake intake;
   private Drivetrain drive;
   private OI input;
-  NetworkTable table;
-  NetworkTableEntry targetX;
-  NetworkTableEntry targetY;
-  
-  @Override
+
+  private Conveyor conveyor;
+
+
   public void robotInit() {
+    WPI_TalonSRX intakeMotor = new WPI_TalonSRX(5);
+
+    NetworkTable table;
+    NetworkTableEntry targetX;
+    NetworkTableEntry targetY;
+  
+    WPI_TalonSRX intakeMotor = new WPI_TalonSRX(5);
     WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
     WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
     WPI_TalonSRX rightFollower = new WPI_TalonSRX(2);
+    WPI_TalonSRX frontConveyor = new WPI_TalonSRX(4);
+    WPI_TalonSRX backConveyor = new WPI_TalonSRX(3);
 
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
@@ -55,6 +65,9 @@ public class Robot extends TimedRobot {
     Joystick drive = new Joystick(0);
     Joystick operator = new Joystick(1);
     input = new OI(drive, operator);
+    intake = new Intake(intakeMotor);
+    conveyor = new Conveyor(frontConveyor, backConveyor);
+    
   }
 
   @Override
@@ -78,6 +91,7 @@ public class Robot extends TimedRobot {
     double driveY = -input.driver.getRawAxis(1);
     double zRotation = input.driver.getRawAxis(2);
     double rightDriveY = input.driver.getRawAxis(3);
+    
 
     if (input.getDriveMode() == DriveMode.SPEED) {
       // Speed
@@ -107,8 +121,32 @@ public class Robot extends TimedRobot {
       input.setDriveMode(DriveMode.DEFAULT);
     }
     
+    
+    
+    
+    
+    
+      if(input.driver.getRawButton(1)){
+        intake.on();
+        conveyor.on();
+    } else{
+      
+        intake.off();
+        conveyor.off();
+      
 
+    }
+
+    if(input.driver.getRawButton(2)){
+      conveyor.backwards();
+    }else{
+      conveyor.off();
+    }
+
+  
+  
   }
+
 
   @Override
   public void testInit() {
