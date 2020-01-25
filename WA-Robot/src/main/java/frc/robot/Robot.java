@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
 import frc.robot.components.OI.DriveMode;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
     double driveY = -input.driver.getRawAxis(1);
     double zRotation = input.driver.getRawAxis(2);
     double rightDriveY = input.driver.getRawAxis(3);
-
+    SmartDashboard.putString("Drivemode", input.getDriveMode().name());
     if (input.getDriveMode() == DriveMode.SPEED) {
       // Speed
     } else if (input.getDriveMode() == DriveMode.PRECISION) {
