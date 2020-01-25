@@ -21,20 +21,20 @@ public class Intake{
     this.intake= intake;
 
     }
-public Boolean isIntakeRunning(){
-    return intakeRunning;
+    public Boolean isIntakeRunning(){
+        return intakeRunning;
     }
 
-public void on(){
-    intake.set(1);
-    intakeRunning = true;
+    public void on(){
+        intake.set(1);
+        intakeRunning = true;
 
     }
 
-public void off(){
-    intake.set(0);
-    intakeRunning = false;
-    }
+    public void off(){
+        intake.set(0);
+        intakeRunning = false;
+    }   
 
 
 
