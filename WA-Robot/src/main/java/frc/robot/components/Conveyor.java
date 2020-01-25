@@ -24,35 +24,35 @@ public class Conveyor{
 
 
 
-public enum ConveyorMode {
-    FORWARDS, BACKWARDS, OFF
-}
-
-public ConveyorMode getConveyorMode(){
-    return mode;
-}
-
-public void setConveyorMode(ConveyorMode mode){
-    this.mode = mode;
-}
-
-public void on(){
-    frontConveyor.set(1);
-    backConveyor.set(1);
-    mode = ConveyorMode.FORWARDS;
-    
-
-}
-public void off(){
-    frontConveyor.set(0);
-    backConveyor.set(0);
-    mode = ConveyorMode.OFF;
+    public enum ConveyorMode {
+        FORWARDS, BACKWARDS, OFF
     }
 
-public void backwards(){
-    frontConveyor.set(-1);
-    backConveyor.set(-1);
-    mode = ConveyorMode.BACKWARDS;
+    public ConveyorMode getConveyorMode(){
+        return mode;
+    }
+
+    public void setConveyorMode(ConveyorMode mode){
+        this.mode = mode;
+    }
+
+    public void on(){
+        frontConveyor.set(1);
+        backConveyor.set(1);
+        mode = ConveyorMode.FORWARDS;
+    
+
+    }
+    public void off(){
+        frontConveyor.set(0);
+        backConveyor.set(0);
+        mode = ConveyorMode.OFF;
+    }
+
+    public void backwards(){
+        frontConveyor.set(-1);
+        backConveyor.set(-1);
+        mode = ConveyorMode.BACKWARDS;
     
     }
 
