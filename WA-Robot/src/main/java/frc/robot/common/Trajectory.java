@@ -10,11 +10,12 @@ public class Trajectory{
 
         Contributed by: Victor Henriksson
     */
-    private double kTheta = 37.0; // Degree
+    private double kTheta = 0; // Degree 37.0 
     private double kY = 0;// Height shooting board
     private double kG = -9.8; // Acceleration due to gravity
     private double correctionFactor = 0;
-    public Trajectory(double kY, double correctionFactor){
+    public Trajectory(double kTheta,double kY, double correctionFactor){
+        this.kTheta = kTheta;
         this.kY = kY;
         this.correctionFactor = correctionFactor;
     }
