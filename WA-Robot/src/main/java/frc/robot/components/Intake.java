@@ -20,21 +20,21 @@ public class Intake{
     public Intake(final WPI_TalonSRX intake){
     this.intake= intake;
 
-}
+    }
 public Boolean isIntakeRunning(){
     return intakeRunning;
-}
+    }
 
 public void on(){
     intake.set(1);
     intakeRunning = true;
 
-}
+    }
 
 public void off(){
     intake.set(0);
     intakeRunning = false;
-}
+    }
 
 
 

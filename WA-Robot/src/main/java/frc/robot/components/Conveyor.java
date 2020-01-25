@@ -47,14 +47,14 @@ public void off(){
     frontConveyor.set(0);
     backConveyor.set(0);
     mode = ConveyorMode.OFF;
-}
+    }
 
 public void backwards(){
     frontConveyor.set(-1);
     backConveyor.set(-1);
     mode = ConveyorMode.BACKWARDS;
     
-}
+    }
 
 
 }
