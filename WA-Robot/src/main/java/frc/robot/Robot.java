@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -16,7 +17,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
 import frc.robot.components.OI.DriveMode;
-import frc.robot.components.Shooter;
+//import frc.robot.components.Shooter;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -32,22 +34,30 @@ public class Robot extends TimedRobot {
 
   
   
-  private Drivetrain drive;
+  //private Drivetrain drive;
   private OI input;
-  private Shooter shooter;
+  //private Shooter shooter;
+  WPI_TalonSRX leftShooter;
+  WPI_TalonSRX rigntShooter;
+  //DoubleSolenoid yeet;
   @Override
   public void robotInit() {
-    
+    /*
     WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
     WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
     WPI_TalonSRX rightFollower = new WPI_TalonSRX(2);
-    WPI_TalonSRX leftShooter = new WPI_TalonSRX(3);
-    WPI_TalonSRX rightShooter = new WPI_TalonSRX(4);
+    */
+    leftShooter = new WPI_TalonSRX(2);
+    rigntShooter = new WPI_TalonSRX(0);
+    //yeet = new DoubleSolenoid(0,1);
+    /*
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
     drive = new Drivetrain(leftLeader, leftFollower, rightLeader, rightFollower);
-    shooter = new Shooter(leftShooter, rightShooter);
+    */
+    //shooter = new Shooter(leftShooter, rigntShooter);
+
 
     Joystick drive = new Joystick(0);
     Joystick operator = new Joystick(1);
@@ -76,7 +86,7 @@ public class Robot extends TimedRobot {
     double zRotation = input.driver.getRawAxis(2);
     double rightDriveY = input.driver.getRawAxis(3);
 
-    
+    /*
     if (input.getDriveMode() == DriveMode.SPEED) {
       // Speed
     } else if (input.getDriveMode() == DriveMode.PRECISION) {
@@ -92,8 +102,10 @@ public class Robot extends TimedRobot {
           drive.curveDrive(-driveY, zRotation, false);
         }
     }
+    */
 
     // Set driver modes
+    /*
     if (input.driver.getRawButton(1)) {
       // Set Speed Mode
       input.setDriveMode(DriveMode.SPEED);      
@@ -104,9 +116,42 @@ public class Robot extends TimedRobot {
       // Default
       input.setDriveMode(DriveMode.DEFAULT);
     } else if (input.driver.getRawButton(4)) {
-      double speed = 114.5141919;//speed is equal to what vision processing outputs
-      shooter.runSpeed(speed);
+      shooter.spinToRPM(300);
     }
+    */
+    if(input.driver.getRawButton(1)){
+      leftShooter.set(.5);
+    }else{
+      leftShooter.set(0);
+    }
+    if(input.driver.getRawButton(2)){
+      leftShooter.set(-.5);
+    }else{
+      leftShooter.set(0);
+    }
+    /*
+    if(input.driver.getRawButton(1)){
+      shooter.setVelocity(25);
+      if(shooter.isReady()){
+        System.out.println("FIRE!");
+      }
+    }else{
+      shooter.off();
+    }
+    
+     if (input.driver.getRawButton(4)) {
+      rigntShooter.set(ControlMode.PercentOutput, .60);
+     }else{
+      rigntShooter.set(ControlMode.PercentOutput, 0);
+     }
+     if(input.driver.getRawButton(1)){
+      yeet.set(DoubleSolenoid.Value.kForward);
+     }
+     if(input.driver.getRawButton(2)){
+      yeet.set(DoubleSolenoid.Value.kReverse);
+     }
+     */
+
 
   }
 
