@@ -1,5 +1,6 @@
 package frc.robot.components;
 import java.lang.Math;
+import frc.robot.common.PID;
 
 import com.ctre.phoenix.motorcontrol.can.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -112,81 +113,5 @@ public class Shooter {
         rightShooter.set(ControlMode.PercentOutput, 0);
         leftShooter.set(ControlMode.PercentOutput, 0);
     }
-/*
-//get the RPM value with the mag encoder sensors on two Talon SRX Shooters
-//secure the rpm values of two motors are same
-    public double getVelocity() {
-        while (leftShooter.getSelectedSensorVelocity(0) != rightShooter.getSelectedSensorVelocity(0)) {
-            encoderError = "Two Velocity Not Same";
-        }
-        encoderError = "None";
-        return leftShooter.getSelectedSensorVelocity(0);
-    }
 
-    public double getRpm() {
-        while (leftShooter.getSelectedSensorPosition(0) != rightShooter.getSelectedSensorPosition(0)) {
-            encoderError = "Two Velocity Not Same";
-        }
-        encoderError = "None";
-        return leftShooter.getSelectedSensorPosition(0);
-    }
-
-    public void runMotor(double val) {
-        if (runSpeed(val)) {
-            encoderOn = true;
-            return;
-        } else {
-            encoderError = "Unable to Set the Speed";
-        }
-    }
-
-    public void resetEncoders() {
-        leftShooter.setSelectedSensorPosition(0, 0, 0);
-        rightShooter.setSelectedSensorPosition(0, 0, 0);
-    }
-
-    public Boolean runSpeed(double speed) {
-       
-    }
-
-    public double getEncoder() {
-        return leftShooter.getSelectedSensorPosition(0) / SHOOTER_CONSTANT;
-    }
-
-    public Boolean encoderOn() {
-        return encoderOn;
-    }
-
-    public String getErrorType() {
-        return encoderError;
-    }
-
-    public void setMotionMagicSetpoint(double setpoint, int cruiseVelocity, double secsToMaxSpeed) {
-        leftShooter.configMotionCruiseVelocity(cruiseVelocity, 0);
-        rightShooter.configMotionCruiseVelocity(cruiseVelocity, 0);
-        //Assume setpoint limit is 70;
-        if (setpoint > 70){
-          secsToMaxSpeed = 0.6; 
-        }
-  
-        if ((this.getEncoder() > 50) && setpoint > this.getEncoder()){
-          //3 second acceleration at top
-          leftShooter.configMotionAcceleration((int) ((MAX_VAL)/secsToMaxSpeed), 0);
-          rightShooter.configMotionAcceleration((int) ((MAX_VAL)/secsToMaxSpeed), 0); 
-        } else {
-          //regular acceleration
-          leftShooter.configMotionAcceleration((int)(MAX_VAL / secsToMaxSpeed), 0);
-          rightShooter.configMotionAcceleration((int)(MAX_VAL / secsToMaxSpeed), 0);
-        }
-  
-        this.runMotionMagic(setpoint * SHOOTER_CONSTANT);
-    }
-
-    public void runMotionMagic(double val){
-        leftShooter.set(ControlMode.MotionMagic, val);
-        rightShooter.set(ControlMode.MotionMagic, val);
-        motionErrorLeft = leftShooter.getClosedLoopError(0);
-        motionErrorRight = rightShooter.getClosedLoopError(0);
-    }
-    */
 }
