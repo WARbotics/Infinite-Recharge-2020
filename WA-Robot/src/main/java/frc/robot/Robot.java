@@ -44,10 +44,6 @@ public class Robot extends TimedRobot {
 
 
   public void robotInit() {
-
-    NetworkTable table;
-    NetworkTableEntry targetX;
-    NetworkTableEntry targetY;
   
     WPI_TalonSRX intakeMotor = new WPI_TalonSRX(5);
     WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
