@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -21,6 +22,7 @@ import frc.robot.components.Conveyor;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,9 +42,8 @@ public class Robot extends TimedRobot {
   private Drivetrain drive;
   private OI input;
 
-  private Conveyor conveyor;
-
-
+  private Shooter shooter;
+  @Override
   public void robotInit() {
   
     WPI_TalonSRX intakeMotor = new WPI_TalonSRX(5);
@@ -52,11 +53,10 @@ public class Robot extends TimedRobot {
     WPI_TalonSRX rightFollower = new WPI_TalonSRX(2);
     //WPI_TalonSRX frontConveyor = new WPI_TalonSRX(4);
     //WPI_TalonSRX backConveyor = new WPI_TalonSRX(3);
-
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
     drive = new Drivetrain(leftLeader, leftFollower, rightLeader, rightFollower);
-    
+    shooter = new Shooter(leftShooter, rightShooter);
 
     Joystick drive = new Joystick(0);
     Joystick operator = new Joystick(1);
@@ -107,14 +107,19 @@ public class Robot extends TimedRobot {
     // Set driver modes
     if (input.driver.getRawButton(1)) {
       // Set Speed Mode
-      input.setDriveMode(DriveMode.SPEED);
+      input.setDriveMode(DriveMode.SPEED);      
     } else if (input.driver.getRawButton(2)) {
       // Precision
       input.setDriveMode(DriveMode.PRECISION);
     } else if (input.driver.getRawButton(3)) {
       // Default
       input.setDriveMode(DriveMode.DEFAULT);
+    } else if (input.driver.getRawButton(4)) {
+      int speed = 5;//speed is equal to what vision processing outputs
+      shooter.runMotor(speed);
     }
+
+
     
     
     
