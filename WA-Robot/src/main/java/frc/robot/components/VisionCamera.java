@@ -28,7 +28,7 @@ public class VisionCamera{
     public Boolean isConnected(){
         return isConnected;
     }
-
+    
     public double getDistance(){
         double[] defaultValue = {0.0, 0.0, 0.0};
         return table.getEntry("targetPose").getDoubleArray(defaultValue)[0];
