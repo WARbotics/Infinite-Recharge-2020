@@ -42,7 +42,6 @@ public class Robot extends TimedRobot {
   private Drivetrain drive;
   private OI input;
 
-  private Shooter shooter;
   @Override
   public void robotInit() {
   
@@ -56,7 +55,6 @@ public class Robot extends TimedRobot {
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
     drive = new Drivetrain(leftLeader, leftFollower, rightLeader, rightFollower);
-    shooter = new Shooter(leftShooter, rightShooter);
 
     Joystick drive = new Joystick(0);
     Joystick operator = new Joystick(1);
@@ -114,9 +112,6 @@ public class Robot extends TimedRobot {
     } else if (input.driver.getRawButton(3)) {
       // Default
       input.setDriveMode(DriveMode.DEFAULT);
-    } else if (input.driver.getRawButton(4)) {
-      int speed = 5;//speed is equal to what vision processing outputs
-      shooter.runMotor(speed);
     }
 
 

@@ -1,6 +1,7 @@
-package frc.robots.components;
+package frc.robot.common.AutoCommands;
 
-import frc.robots.components.Drivetrain;
+import frc.robot.common.AutoCommand;
+import frc.robot.components.Drivetrain;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
