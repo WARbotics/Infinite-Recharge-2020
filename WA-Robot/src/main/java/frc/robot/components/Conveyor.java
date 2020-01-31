@@ -8,8 +8,6 @@ public class Conveyor{
     *the power cell to the ball shooter. If need be, there belt can also go backwards.
     *
     *Contributed: Lily
-    *
-    *
     */
  
     

@@ -44,19 +44,14 @@ public class Robot extends TimedRobot {
 
 
   public void robotInit() {
-    WPI_TalonSRX intakeMotor = new WPI_TalonSRX(5);
-
-    NetworkTable table;
-    NetworkTableEntry targetX;
-    NetworkTableEntry targetY;
   
     WPI_TalonSRX intakeMotor = new WPI_TalonSRX(5);
     WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
     WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
     WPI_TalonSRX rightFollower = new WPI_TalonSRX(2);
-    WPI_TalonSRX frontConveyor = new WPI_TalonSRX(4);
-    WPI_TalonSRX backConveyor = new WPI_TalonSRX(3);
+    //WPI_TalonSRX frontConveyor = new WPI_TalonSRX(4);
+    //WPI_TalonSRX backConveyor = new WPI_TalonSRX(3);
 
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
@@ -67,7 +62,7 @@ public class Robot extends TimedRobot {
     Joystick operator = new Joystick(1);
     input = new OI(drive, operator);
     intake = new Intake(intakeMotor);
-    conveyor = new Conveyor(frontConveyor, backConveyor);
+    //conveyor = new Conveyor(frontConveyor, backConveyor);
     
   }
 
@@ -125,18 +120,17 @@ public class Robot extends TimedRobot {
     
     
     
-    /*
+
     if(input.driver.getRawButton(1)){
         intake.on();
-        conveyor.on();
+        //conveyor.on();
     } else{
       
         intake.off();
-        conveyor.off();
-      
+        //conveyor.off();
 
     }
-
+    /*
     if(input.driver.getRawButton(2)){
       conveyor.backwards();
     }else{
