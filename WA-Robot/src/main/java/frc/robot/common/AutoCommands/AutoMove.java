@@ -6,6 +6,16 @@ import frc.robot.common.PID;
 
 
 public class AutoMove extends AutoCommand{
+    /*
+    *This is an auto command that initiats the move funstion in automous. Uses a PID
+    *so that as the robot gest closer to the distance(setPoint), it slows down.
+    *
+    *Contributed by: Lily
+    *
+    *
+    *
+    *
+    */
 
     private Drivetrain drive;
     public double speed = 0.0;
