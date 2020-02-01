@@ -18,16 +18,33 @@ public class AutoTurn extends AutoCommand{
     */
     static private AHRS ahrsDevice;
     static private Drivetrain robotDrive;
+    private double angle = 0.0;
+    private double speed = 0.0;
+    private double time = 0.0;
 
-    public AutoTurn(WPI_TalonSRX leftLeadTalonSRX, WPI_VictorSPX leftFollowSPX, WPI_TalonSRX rightLeadSRX,
-    WPI_TalonSRX rightFollowSPX, String name, double time) {
-        super(name, time);
+    public AutoTurn(Drivetrain drive, double time, double angle) {
+        super("AutoTurn", time);
         ahrsDevice = new AHRS(SPI.Port.kMXP);
-        robotDrive = new Drivetrain(leftLeadTalonSRX, leftFollowSPX, rightLeadSRX,
-        rightFollowSPX);
+        robotDrive = drive;
     }
 
-    public void robotRotating (double speed, double angle) {
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    public void setAngle(double angle) {
+        this.angle = angle;
+    }
+
+    public void setTime(double time) {
+        this.time = time;
+    }
+    
+    public void init() {
+
+    }
+
+    public void command() {
         double angleDiff = angle - ahrsDevice.getAngle();
         double rotation = angleDiff * 0.05;
     
@@ -40,5 +57,5 @@ public class AutoTurn extends AutoCommand{
 
         SmartDashboard.putNumber("Turn Input for straight driving", rotation);
         robotDrive.curveDrive(speed, rotation, true);
-    }
+    }   
 }
