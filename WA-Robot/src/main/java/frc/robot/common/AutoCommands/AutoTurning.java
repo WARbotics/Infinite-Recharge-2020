@@ -7,7 +7,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class AutoTurn extends AutoCommand{
+public class AutoTurning extends AutoCommand{
     /*
     *This object receives all the motors for drivetrain and initiates NavX Micro (for angle) and drivetrain(four motors)
     *For the rotating method, it receives the desired angle and the desired speed
@@ -20,10 +20,9 @@ public class AutoTurn extends AutoCommand{
     static private Drivetrain robotDrive;
     private double angle = 0.0;
     private double speed = 0.0;
-    private double time = 0.0;
 
-    public AutoTurn(Drivetrain drive, double time, double angle) {
-        super("AutoTurn", time);
+    public AutoTurning(Drivetrain drive, double time, double angle) {
+        super("AutoTurning", time);
         ahrsDevice = new AHRS(SPI.Port.kMXP);
         robotDrive = drive;
     }
@@ -36,10 +35,6 @@ public class AutoTurn extends AutoCommand{
         this.angle = angle;
     }
 
-    public void setTime(double time) {
-        this.time = time;
-    }
-    
     public void init() {
 
     }

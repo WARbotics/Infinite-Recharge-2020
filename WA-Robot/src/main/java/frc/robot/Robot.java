@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.components.Drivetrain;
@@ -41,20 +42,28 @@ public class Robot extends TimedRobot {
   private Intake intake;
   private Drivetrain drive;
   private OI input;
+  private static final double cpr = 360; // am-3132
+  private static final double wheelDiameter = 6; // 6 inch wheel
 
   @Override
   public void robotInit() {
   
     WPI_TalonSRX intakeMotor = new WPI_TalonSRX(5);
+
+    //Drivetrain
     WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
     WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
     WPI_TalonSRX rightFollower = new WPI_TalonSRX(2);
+    Encoder leftEncoder = new Encoder(0,1);
+    Encoder rightEncoder = new Encoder(2,3);
+    leftEncoder.setDistancePerPulse(Math.PI * wheelDiameter / cpr);
+    rightEncoder.setDistancePerPulse(Math.PI * wheelDiameter / cpr);
     //WPI_TalonSRX frontConveyor = new WPI_TalonSRX(4);
     //WPI_TalonSRX backConveyor = new WPI_TalonSRX(3);
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
-    drive = new Drivetrain(leftLeader, leftFollower, rightLeader, rightFollower);
+    drive = new Drivetrain(leftLeader, leftFollower, rightLeader, rightFollower, leftEncoder, rightEncoder);
 
     Joystick drive = new Joystick(0);
     Joystick operator = new Joystick(1);
