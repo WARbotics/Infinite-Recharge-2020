@@ -1,11 +1,11 @@
-package frc.robot;
-
+package frc.robot.common.AutoCommands;
 
 import frc.robot.components.Drivetrain;
+import frc.robot.common.AutoCommand;
 import frc.robot.common.PID;
 
 
-public class autoMove{
+public class AutoMove extends AutoCommand{
 
     private Drivetrain drive;
     public double speed = 0.0;
@@ -14,7 +14,7 @@ public class autoMove{
     public double setPoint = 0.0;
     private PID PID = new PID(0.1, 0.00, 0.00);
     
-    public autoMove(Drivetrain drive, double speed, double time, double setPoint){
+    public AutoMove(Drivetrain drive, double speed, double time, double setPoint){
         this.drive = drive;
         this.setPoint = setPoint;
         
