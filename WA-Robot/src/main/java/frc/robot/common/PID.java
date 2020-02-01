@@ -2,7 +2,7 @@ package frc.robot.common;
 
 public class PID {
     double P, I, D;
-    float setPoint = 0;
+    double setPoint = 0;
     double integral, previous_error;
     double rate;
 
@@ -12,7 +12,7 @@ public class PID {
         this.D = D;
     }
 
-    public void setPoint(int setPoint) {
+    public void setPoint(double setPoint) {
         this.setPoint = setPoint;
     }
 
