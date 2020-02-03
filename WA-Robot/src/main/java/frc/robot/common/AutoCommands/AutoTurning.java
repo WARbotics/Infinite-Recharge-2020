@@ -2,20 +2,15 @@ package frc.robot.common.AutoCommands;
 
 import frc.robot.common.AutoCommand;
 import frc.robot.components.Drivetrain;
+import frc.robot.common.PID;
 
 import java.lang.*;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-private PID PID = new PID(0.10, 0.00, 0.0);
-private double distance = 0.0;
-private double angle = 0.0;
-private double speed = 0.0;
-private double time = 0.0;
-final static private double ROBOT_RADIUS = 3.1415926;
 
-public class AutoTurn extends AutoCommand{
+public class AutoTurning extends AutoCommand{
     /*
     *This object receives all the motors for drivetrain and initiates NavX Micro (for angle) and drivetrain(four motors)
     *For the rotating method, it receives the desired angle and the desired speed
@@ -24,34 +19,25 @@ public class AutoTurn extends AutoCommand{
     *With the PID build within drivetrain, the robot achieves the desired goal.
     *Contributed by Bowen Tan
     */
-    static private AHRS ahrsDevice;
-    static private Drivetrain robotDrive;
-    
-    public AutoTurn(Drivetrain drive, double time, double angle) {
+    private AHRS ahrsDevice;
+    private Drivetrain drive;
+    private PID PID = new PID(0.10, 0.00, 0.0);
+
+    private double angle = 0.0;
+    private double ROBOT_RADIUS = 3.1415926;
+    public AutoTurning(Drivetrain drive, double time, double angle) {
         super("AutoTurn", time);
         ahrsDevice = new AHRS(SPI.Port.kMXP);
-        robotDrive = drive;
+        this.drive = drive;
     }
 
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
-
-    public void setAngle(double angle) {
-        this.angle = angle;
-        this.distance = angle * 2 * ROBOT_RADIUS * Math.PI;
-    }
-
-    public void setTime(double time) {
-        this.time = time;
-    }
 
     public void init() {
 
     }
 
     public void command() {
-        double realAngle = ahrsDrive.pidGet();
+        double realAngle = ahrsDevice.pidGet();
         if (realAngle < 0) {
             realAngle += 360;
         }
