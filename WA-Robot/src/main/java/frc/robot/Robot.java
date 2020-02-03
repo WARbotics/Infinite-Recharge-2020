@@ -134,7 +134,13 @@ public class Robot extends TimedRobot {
       conveyor.off();
     }
 
-  
+    if(input.driver.getRawButton(3)){
+      conveyor.hardStopUp();
+    }
+
+    if(input.driver.getRawButton(4)){
+      conveyor.hardStopDown();
+    }
   
   }
 

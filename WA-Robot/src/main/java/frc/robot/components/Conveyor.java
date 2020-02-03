@@ -1,6 +1,8 @@
 package frc.robot.components;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Conveyor{
     /*
@@ -22,8 +24,9 @@ public class Conveyor{
     this.backConveyor= backConveyor;
 }
 
-
-
+    DoubleSolenoid hardStop = new DoubleSolenoid(1, 2);
+    
+    
     public enum ConveyorMode {
         FORWARDS, BACKWARDS, OFF
     }
@@ -56,5 +59,12 @@ public class Conveyor{
     
     }
 
+    public void hardStopUp(){
+        hardStop.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public void hardStopDown(){
+        hardStop.set(DoubleSolenoid.Value.kReverse);
+    }
 
 }
