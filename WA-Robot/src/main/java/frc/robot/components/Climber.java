@@ -1,6 +1,8 @@
 package frc.robot.components;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
@@ -12,7 +14,8 @@ public class Climber {
     public Climber(WPI_TalonSRX motor, DoubleSolenoid hook){
         this.motor = motor;
         this.hook = hook;
-        this.motor.
+        this.motor.configFactoryDefault();
+        this.motor.configForwardLimitSwitchSource(LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen);
     }
 
     public void up(){
