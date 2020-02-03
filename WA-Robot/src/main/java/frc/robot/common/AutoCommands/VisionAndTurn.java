@@ -1,8 +1,8 @@
 package frc.robot.common.AutoCommands;
 
-import frc.robot.common.FollowVision;
 import frc.robot.common.AutoCommand;
 import frc.robot.components.Drivetrain;
+import frc.robot.components.VisionCamera;
 import frc.robot.common.PID;
 
 import java.lang.*;
@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class AutoTurn extends AutoCommand{
+public class VisionAndTurn extends AutoCommand{
     /*
     *This object receives all the motors for drivetrain and initiates NavX Micro (for angle) and drivetrain(four motors)
     *For the rotating method, it receives the desired angle and the desired speed
@@ -22,14 +22,27 @@ public class AutoTurn extends AutoCommand{
     */
     private AHRS ahrsDevice;
     private Drivetrain drive;
+    private VisionCamera vision;
     private PID PID = new PID(0.10, 0.00, 0.0);
 
+    double KpRot = -0.1;
+    double KpDist = -0.1;
+    double angleTolerance = 5;// Deadzone for the angle control loop
+    double distanceTolerance = 5;// Deadzone for the distance control loop
+    double constantForce = 0.05;
+    double rotationAjust, rotationError;
+    double distanceAjust;
+
     private double angle = 0.0;
+    //Assume the robot radius is PI;
     private double ROBOT_RADIUS = 3.1415926;
-    public AutoTurn(Drivetrain drive, double time, double angle) {
-        super("AutoTurn", time);
+
+
+    public VisionAndTurn(Drivetrain drive, VisionCamera vision, double time, double angle) {
+        super("VisionAndTurn", time);
         ahrsDevice = new AHRS(SPI.Port.kMXP);
         this.drive = drive;
+        this.vision = vision;
     }
 
 
@@ -37,6 +50,36 @@ public class AutoTurn extends AutoCommand{
 
     }
 
+    private double visionProcess() {
+        if (!vision.isConnected()) {
+            return 0.0;
+        }
+        // Example code from Chameleon
+        rotationError = vision.getYaw();
+        rotationAjust = 0;
+        distanceAjust = 0;
+        if (rotationError > angleTolerance)
+            rotationAjust = KpRot * rotationError + constantForce;
+        else if (rotationError < angleTolerance)
+            rotationAjust = KpRot * rotationError - constantForce;
+        /*
+        * Proportional (to targetY) control loop for distance Deadzone of
+        * distanceTolerance Constant power is added to the direction the control loop
+        * wants to turn (to overcome friction)
+        */
+        if (distanceError > distanceTolerance)
+            distanceAjust = KpDist * distanceError + constantForce;
+        else if (distanceError < distanceTolerance)
+            distanceAjust = KpDist * distanceError - constantForce;
+
+        // Output the power signals to a arcade drivetrain
+        return rotationAjust;
+        }
+    }
+
+    public void getAngle() {
+        this.angle = this.visionProcess();
+    }
     public void command() {
         double realAngle = ahrsDevice.pidGet();
         if (realAngle < 0) {
