@@ -119,10 +119,6 @@ public class Robot extends TimedRobot {
 
   }
 
-  @Override
-  public boolean isTurning() {
-      return Math.abs(ahrsDevice.getRate()) >= 7.5;
-  }
 
   @Override
   public void teleopPeriodic() {

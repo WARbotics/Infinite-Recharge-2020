@@ -92,4 +92,7 @@ public class AutoTurn extends AutoCommand{
             drive.drive.tankDrive(PID.getRate(), PID.getRate() * (-1), false);
         }
     }
+    public boolean isTurning(){
+        return Math.abs(ahrsDevice.getRate()) >= 7.5;
+    }
 }
