@@ -24,7 +24,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
-
+import java.lang.Math;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -86,6 +86,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
 
+  }
+
+  @Override
+  public boolean isTurning() {
+      return Math.abs(ahrsDevice.getRate()) >= 7.5;
   }
 
   @Override
