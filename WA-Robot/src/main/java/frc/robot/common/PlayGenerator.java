@@ -40,4 +40,7 @@ public class PlayGenerator{
     public static ArrayList<String> getPlays(){
         return plays;
     }
+    public void addPlay(AutoCommand command){
+        commands.add(command);
+    }
 }

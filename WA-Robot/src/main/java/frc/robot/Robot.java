@@ -17,12 +17,16 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
 import frc.robot.components.OI.DriveMode;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.Intake;
 import frc.robot.components.Conveyor;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.common.PlayGenerator;
+import frc.robot.common.AutoCommands.AutoMove;
+import frc.robot.common.AutoCommands.AutoTurn;
 
 
 /**
@@ -44,6 +48,13 @@ public class Robot extends TimedRobot {
   private OI input;
   private static final double cpr = 360; // am-3132
   private static final double wheelDiameter = 6; // 6 inch wheel
+  private static final String kDefaultAuto = "Default";
+  private static final String kFowardAuto = "Foward Auto";
+  private static final String kLeftAuto = "Left Auto";
+  private static final String kRightAuto = "Right Auto";
+  private String m_autoSelected;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private PlayGenerator fowardAuto = new PlayGenerator("fowardAuto");
 
   @Override
   public void robotInit() {
@@ -70,17 +81,37 @@ public class Robot extends TimedRobot {
     input = new OI(drive, operator);
     intake = new Intake(intakeMotor);
     //conveyor = new Conveyor(frontConveyor, backConveyor);
+    // Auto
+    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    m_chooser.addOption("Foward Auto", kFowardAuto);
+    m_chooser.addOption("Left Auto", kLeftAuto);
+    m_chooser.addOption("Right Auto", kRightAuto);
+    SmartDashboard.putData("Auto choices", m_chooser);
     
   }
 
   @Override
   public void autonomousInit() {
-    
+    m_autoSelected = m_chooser.getSelected();
+    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    System.out.println("Auto selected: " + m_autoSelected);
   }
 
   @Override
   public void autonomousPeriodic() {
-
+    switch(m_autoSelected){
+      case kDefaultAuto:
+        
+        break;
+      case kFowardAuto:
+        fowardAuto.addPlay((new AutoMove(drive, 1.5, 1.0)));
+  
+        break;
+      case kLeftAuto:
+        break;
+      case kRightAuto:
+        break;
+      
   }
 
   @Override

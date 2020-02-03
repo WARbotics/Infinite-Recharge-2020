@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class AutoTurning extends AutoCommand{
+public class AutoTurn extends AutoCommand{
     /*
     *This object receives all the motors for drivetrain and initiates NavX Micro (for angle) and drivetrain(four motors)
     *For the rotating method, it receives the desired angle and the desired speed
@@ -25,7 +25,7 @@ public class AutoTurning extends AutoCommand{
 
     private double angle = 0.0;
     private double ROBOT_RADIUS = 3.1415926;
-    public AutoTurning(Drivetrain drive, double time, double angle) {
+    public AutoTurn(Drivetrain drive, double time, double angle) {
         super("AutoTurn", time);
         ahrsDevice = new AHRS(SPI.Port.kMXP);
         this.drive = drive;
