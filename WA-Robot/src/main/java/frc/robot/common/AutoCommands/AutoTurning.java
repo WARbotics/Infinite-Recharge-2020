@@ -66,19 +66,27 @@ public class AutoTurning extends AutoCommand{
         
         SmartDashboard.putNumber("Turn Input for straight driving", PID.getRate());
         if (goLeft) {
-            double angle = realAngle - angleDiff;
+        //if expected angle is bigger than the real angle (0<=real<=90 && 270<=actual<=360)
+        //make them both 90<=both<=270 (both at opposite sides of the circle)
+            if (angle > realAngle) {
+                realAngle += 180;
+                angle -= 180;
+            }
             double dist = angle * 2 * Math.PI * ROBOT_RADIUS / 360;
             double actualDist = realAngle * 2 * Math.PI * ROBOT_RADIUS / 360;
             PID.setPoint(dist);
             PID.setActual(actualDist);
             drive.drive.tankDrive(PID.getRate() * (-1), PID.getRate(), false);
         } 
+        //if expected angle is smaller than the real angle (270<=real<=360 && 0<=actual<=90)
+        //make them both 90<=both<=270 (both at opposite sides of the circle)
         else if (goRight) {
-            double angle = realAngle + angleDiff;
+            if (angle < realAngle) {
+                realAngle -= 180;
+                angle += 180;
+            }
             double dist = angle * 2 * Math.PI * ROBOT_RADIUS / 360;
             double actualDist = realAngle * 2 * Math.PI * ROBOT_RADIUS / 360;
-            PID.setPoint(dist);
-            PID.setActual(actualDist);
             PID.setPoint(dist);
             PID.setActual(actualDist);
             drive.drive.tankDrive(PID.getRate(), PID.getRate() * (-1), false);
