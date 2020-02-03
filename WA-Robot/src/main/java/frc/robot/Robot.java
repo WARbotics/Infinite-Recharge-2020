@@ -17,6 +17,9 @@ import frc.robot.components.OI;
 import frc.robot.components.OI.DriveMode;
 import frc.robot.components.Intake;
 import frc.robot.components.Conveyor;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -35,10 +38,17 @@ public class Robot extends TimedRobot {
   private Intake intake;
   private Drivetrain drive;
   private OI input;
+
   private Conveyor conveyor;
 
-  @Override
+
   public void robotInit() {
+    WPI_TalonSRX intakeMotor = new WPI_TalonSRX(5);
+
+    NetworkTable table;
+    NetworkTableEntry targetX;
+    NetworkTableEntry targetY;
+  
     WPI_TalonSRX intakeMotor = new WPI_TalonSRX(5);
     WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
@@ -83,7 +93,6 @@ public class Robot extends TimedRobot {
     double rightDriveY = input.driver.getRawAxis(3);
     
 
-    
     if (input.getDriveMode() == DriveMode.SPEED) {
       // Speed
     } else if (input.getDriveMode() == DriveMode.PRECISION) {
