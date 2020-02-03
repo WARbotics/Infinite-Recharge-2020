@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class VisionAndTurn extends AutoCommand{
+public class AutoVisionAndTurn extends AutoCommand{
     /*
     *This object receives all the motors for drivetrain and initiates NavX Micro (for angle) and drivetrain(four motors)
     *For the rotating method, it receives the desired angle and the desired speed
@@ -38,7 +38,7 @@ public class VisionAndTurn extends AutoCommand{
     private double ROBOT_RADIUS = 3.1415926;
 
 
-    public VisionAndTurn(Drivetrain drive, VisionCamera vision, double time, double angle) {
+    public AutoVisionAndTurn(Drivetrain drive, VisionCamera vision, double time, double angle) {
         super("VisionAndTurn", time);
         ahrsDevice = new AHRS(SPI.Port.kMXP);
         this.drive = drive;
@@ -67,11 +67,6 @@ public class VisionAndTurn extends AutoCommand{
         * distanceTolerance Constant power is added to the direction the control loop
         * wants to turn (to overcome friction)
         */
-        if (distanceError > distanceTolerance)
-            distanceAjust = KpDist * distanceError + constantForce;
-        else if (distanceError < distanceTolerance)
-            distanceAjust = KpDist * distanceError - constantForce;
-
         // Output the power signals to a arcade drivetrain
         return rotationAjust;
         }
