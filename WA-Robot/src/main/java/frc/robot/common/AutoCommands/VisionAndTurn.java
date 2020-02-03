@@ -81,6 +81,7 @@ public class VisionAndTurn extends AutoCommand{
         this.angle = this.visionProcess();
     }
     public void command() {
+        this.getAngle();
         double realAngle = ahrsDevice.pidGet();
         if (realAngle < 0) {
             realAngle += 360;
