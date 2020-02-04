@@ -1,8 +1,10 @@
 package frc.robot.components;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.playingwithfusion.TimeOfFlight;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.Sendable;
 
 public class Conveyor{
     /*
@@ -16,14 +18,17 @@ public class Conveyor{
  
     
     private ConveyorMode mode = ConveyorMode.OFF;
+    
 
     private final WPI_TalonSRX frontConveyor;
     private final WPI_TalonSRX backConveyor;
-    public Conveyor(WPI_TalonSRX frontConveyor, WPI_TalonSRX backConveyor){
+    private final TimeOfFlight ballSensor;
+    public Conveyor(WPI_TalonSRX frontConveyor, WPI_TalonSRX backConveyor, TimeOfFlight ballSensor){
     this.frontConveyor= frontConveyor;
     this.backConveyor= backConveyor;
-}
-
+    this.ballSensor = ballSensor;
+     } 
+    
     DoubleSolenoid hardStop = new DoubleSolenoid(1, 2);
     
     
@@ -65,6 +70,10 @@ public class Conveyor{
 
     public void hardStopDown(){
         hardStop.set(DoubleSolenoid.Value.kReverse);
+    }
+    
+    public void ballDist(){
+        ballSensor.getRange();
     }
 
 }

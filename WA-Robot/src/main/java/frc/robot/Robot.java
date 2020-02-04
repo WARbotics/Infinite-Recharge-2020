@@ -49,7 +49,7 @@ public class Robot extends TimedRobot {
     NetworkTableEntry targetX;
     NetworkTableEntry targetY;
   
-    WPI_TalonSRX intakeMotor = new WPI_TalonSRX(5);
+    WPI_TalonSRX intake = new WPI_TalonSRX(5);
     WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
     WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
