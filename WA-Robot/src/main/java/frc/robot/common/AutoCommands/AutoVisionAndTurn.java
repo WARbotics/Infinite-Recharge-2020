@@ -69,10 +69,11 @@ public class AutoVisionAndTurn extends AutoCommand{
         */
         // Output the power signals to a arcade drivetrain
         this.angle = rotationAjust;
+        return angle;
     }
 
     public void command() {
-        this.gvisionProcess();
+        this.visionProcess();
         double realAngle = ahrsDevice.pidGet();
         if (realAngle < 0) {
             realAngle += 360;
