@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.playingwithfusion.TimeOfFlight;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.Sendable;
 
 public class Conveyor{
     /*
@@ -22,7 +21,8 @@ public class Conveyor{
 
     private final WPI_TalonSRX frontConveyor;
     private final WPI_TalonSRX backConveyor;
-    private final TimeOfFlight ballSensor;
+    private TimeOfFlight ballSensor;
+    double threshold = .25;
     public Conveyor(WPI_TalonSRX frontConveyor, WPI_TalonSRX backConveyor, TimeOfFlight ballSensor){
     this.frontConveyor= frontConveyor;
     this.backConveyor= backConveyor;
@@ -74,6 +74,14 @@ public class Conveyor{
     
     public void ballDist(){
         ballSensor.getRange();
+    }
+
+    public boolean isBallPresent(){
+        if(ballSensor.getRange() < threshold){
+            return true;
+        }
+    return false;
+    
     }
 
 }
