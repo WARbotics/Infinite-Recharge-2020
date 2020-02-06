@@ -1,27 +1,37 @@
 package frc.robot.components;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.playingwithfusion.TimeOfFlight;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Conveyor{
     /*
     *Decription: This object spins two Talon SRX motors in the same direction to take
     *the power cell to the ball shooter. If need be, there belt can also go backwards.
+    *There is a pnumatic hard stop tha can be activated with a button.
+    *There is a TimeOfFLight sensor that tells the driver when a ball is present.
     *
     *Contributed: Lily
     */
  
     
     private ConveyorMode mode = ConveyorMode.OFF;
+    
 
     private final WPI_TalonSRX frontConveyor;
     private final WPI_TalonSRX backConveyor;
-    public Conveyor(WPI_TalonSRX frontConveyor, WPI_TalonSRX backConveyor){
+    private TimeOfFlight ballSensor;
+    double threshold = .25;
+    public Conveyor(WPI_TalonSRX frontConveyor, WPI_TalonSRX backConveyor, TimeOfFlight ballSensor){
     this.frontConveyor= frontConveyor;
     this.backConveyor= backConveyor;
-}
-
-
-
+    this.ballSensor = ballSensor;
+     } 
+    
+    DoubleSolenoid hardStop = new DoubleSolenoid(1, 2);
+    
+    
     public enum ConveyorMode {
         FORWARDS, BACKWARDS, OFF
     }
@@ -54,5 +64,24 @@ public class Conveyor{
     
     }
 
+    public void hardStopUp(){
+        hardStop.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public void hardStopDown(){
+        hardStop.set(DoubleSolenoid.Value.kReverse);
+    }
+    
+    public void ballDist(){
+        ballSensor.getRange();
+    }
+
+    public boolean isBallPresent(){
+        if(ballSensor.getRange() < threshold){
+            return true;
+        }
+    return false;
+    
+    }
 
 }

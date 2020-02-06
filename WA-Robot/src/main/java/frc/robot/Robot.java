@@ -67,9 +67,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
   
+
     WPI_TalonSRX intakeMotor = new WPI_TalonSRX(5);
 
     //Drivetrain
+
     WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
     WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
@@ -194,7 +196,13 @@ public class Robot extends TimedRobot {
     }
     */
 
-  
+    if(input.driver.getRawButton(3)){
+      conveyor.hardStopUp();
+    }
+
+    if(input.driver.getRawButton(4)){
+      conveyor.hardStopDown();
+    }
   
   }
 
