@@ -9,6 +9,8 @@ public class Conveyor{
     /*
     *Decription: This object spins two Talon SRX motors in the same direction to take
     *the power cell to the ball shooter. If need be, there belt can also go backwards.
+    *There is a pnumatic hard stop tha can be activated with a button.
+    *There is a TimeOfFLight sensor that tells the driver when a ball is present.
     *
     *Contributed: Lily
     *
