@@ -38,7 +38,7 @@ public class AutoVisionAndTurn extends AutoCommand{
     private double ROBOT_RADIUS = 3.1415926;
 
 
-    public AutoVisionAndTurn(Drivetrain drive, VisionCamera vision, double time, double angle) {
+    public AutoVisionAndTurn(Drivetrain drive, VisionCamera vision, double time) {
         super("VisionAndTurn", time);
         ahrsDevice = new AHRS(SPI.Port.kMXP);
         this.drive = drive;

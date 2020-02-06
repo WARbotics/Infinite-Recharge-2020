@@ -14,19 +14,25 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
 import frc.robot.components.OI.DriveMode;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.Intake;
 import frc.robot.components.Conveyor;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
+import frc.robot.common.Trajectory;
 import frc.robot.common.PlayGenerator;
 import frc.robot.common.AutoCommands.AutoMove;
 import frc.robot.common.AutoCommands.AutoTurn;
+import frc.robot.common.AutoCommands.AutoVisionAndTurn;
 
 import java.lang.Math;
 /**
@@ -46,6 +52,8 @@ public class Robot extends TimedRobot {
   private Intake intake;
   private Drivetrain drive;
   private OI input;
+  private VisionCamera vision; 
+  private Trajectory trajectory;
   private static final double cpr = 360; // am-3132
   private static final double wheelDiameter = 6; // 6 inch wheel
   private static final String kDefaultAuto = "Default";
@@ -55,7 +63,7 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private PlayGenerator fowardAuto = new PlayGenerator("fowardAuto");
-
+  private PlayGenerator rightAuto = new PlayGenerator("rightAuto");
   @Override
   public void robotInit() {
   
@@ -80,6 +88,9 @@ public class Robot extends TimedRobot {
     Joystick operator = new Joystick(1);
     input = new OI(drive, operator);
     intake = new Intake(intakeMotor);
+    vision = new VisionCamera("SmartDashboard", "VisionCamera");
+    vision.connect();
+    trajectory = new Trajectory(37.0, 2.19,0.0);
     //conveyor = new Conveyor(frontConveyor, backConveyor);
     // Auto
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
@@ -110,6 +121,10 @@ public class Robot extends TimedRobot {
       case kLeftAuto:
         break;
       case kRightAuto:
+        fowardAuto.addPlay((new AutoMove(drive, 1.5, 1.0, 2.0)));
+        rightAuto.addPlay((new AutoVisionAndTurn(drive, vision, 1.0)));
+        double velocityExpected = trajectory.getVelocity(vision.getDistance());
+        //Shooter Object
         break;
       
   }
