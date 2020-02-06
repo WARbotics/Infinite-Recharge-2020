@@ -13,8 +13,6 @@ public class Conveyor{
     *There is a TimeOfFLight sensor that tells the driver when a ball is present.
     *
     *Contributed: Lily
-    *
-    *
     */
  
     
