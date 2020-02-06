@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
+import frc.robot.components.VisionCamera;
 import frc.robot.components.OI.DriveMode;
 import frc.robot.components.Intake;
 import frc.robot.components.Conveyor;
@@ -121,9 +122,9 @@ public class Robot extends TimedRobot {
       case kLeftAuto:
         break;
       case kRightAuto:
-        fowardAuto.addPlay((new AutoMove(drive, 1.5, 1.0, 2.0)));
+        fowardAuto.addPlay((new AutoMove(drive, 1.5, 1.0)));
         rightAuto.addPlay((new AutoVisionAndTurn(drive, vision, 1.0)));
-        double velocityExpected = trajectory.getVelocity(vision.getDistance());
+        double velocityExpected = trajectory.getVeloctiy(vision.getDistance());
         //Shooter Object
         break;
       
