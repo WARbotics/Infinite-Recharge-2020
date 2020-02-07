@@ -23,10 +23,11 @@ public class AutoTurn extends AutoCommand{
 
     private double angle = 0.0;
     private double ROBOT_RADIUS = 3.1415926;
-    public AutoTurn(Drivetrain drive, double time) {
+    public AutoTurn(Drivetrain drive, double time, double setAngle) {
         super("AutoTurn", time);
         ahrsDevice = new AHRS(SPI.Port.kMXP);
         this.drive = drive;
+        this.angle = setAngle;
     }
 
 
