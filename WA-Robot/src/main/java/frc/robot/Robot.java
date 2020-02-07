@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
+import frc.robot.components.Shooter;
 import frc.robot.components.VisionCamera;
 import frc.robot.components.OI.DriveMode;
 import frc.robot.components.Intake;
@@ -32,6 +33,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.common.Trajectory;
 import frc.robot.common.PlayGenerator;
 import frc.robot.common.AutoCommands.AutoMove;
+import frc.robot.common.AutoCommands.AutoShoot;
 import frc.robot.common.AutoCommands.AutoTurn;
 import frc.robot.common.AutoCommands.AutoVisionAndTurn;
 
@@ -55,6 +57,8 @@ public class Robot extends TimedRobot {
   private OI input;
   private VisionCamera vision; 
   private Trajectory trajectory;
+  private Shooter shooter;
+  private Conveyor conveyor;
   private static final double cpr = 360; // am-3132
   private static final double wheelDiameter = 6; // 6 inch wheel
   private static final String kDefaultAuto = "Default";
@@ -94,7 +98,7 @@ public class Robot extends TimedRobot {
     vision = new VisionCamera("SmartDashboard", "VisionCamera");
     vision.connect();
     trajectory = new Trajectory(37.0, 2.19,0.0);
-    //conveyor = new Conveyor(frontConveyor, backConveyor);
+    //conveyor = new Conveyor(frontConveyor, backConveyor, .25);
     // Auto
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("Foward Auto", kFowardAuto);
@@ -119,7 +123,7 @@ public class Robot extends TimedRobot {
         break;
       case kFowardAuto:
         fowardAuto.addPlay((new AutoMove(drive, 1.5, 1.0)));
-  
+        fowardAuto.addPlay((new AutoShoot(5, shooter, conveyor, vision , trajectory)));
         break;
       case kLeftAuto:
         break;
@@ -196,7 +200,7 @@ public class Robot extends TimedRobot {
       conveyor.off();
     }
     */
-
+    /*
     if(input.driver.getRawButton(3)){
       conveyor.hardStopUp();
     }
@@ -204,7 +208,7 @@ public class Robot extends TimedRobot {
     if(input.driver.getRawButton(4)){
       conveyor.hardStopDown();
     }
-  
+    */
   }
 
 
