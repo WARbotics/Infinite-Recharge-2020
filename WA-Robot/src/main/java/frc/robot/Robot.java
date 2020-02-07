@@ -32,7 +32,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.common.Trajectory;
 import frc.robot.common.PlayGenerator;
 import frc.robot.common.AutoCommands.AutoMove;
-import frc.robot.common.AutoCommands.AutoTurn;
+import frc.robot.common.AutoCommands.AutoShoot;
+import frc.robot.common.AutoCommands.AutoTurning;
 import frc.robot.common.AutoCommands.AutoVisionAndTurn;
 
 import java.lang.Math;
@@ -122,6 +123,13 @@ public class Robot extends TimedRobot {
   
         break;
       case kLeftAuto:
+        fowardAuto.addPlay((new AutoMove(drive, 1.5, -1.0)));
+        fowardAuto.addPlay((new AutoVisionAndTurn(drive, vision, 5)));
+        fowardAuto.addPlay((new AutoShoot(5, shooter, conveyor, camera, trajectory)));
+
+
+
+
         break;
       case kRightAuto:
         fowardAuto.addPlay((new AutoMove(drive, 1.5, 1.0)));
