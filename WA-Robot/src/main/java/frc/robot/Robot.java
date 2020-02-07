@@ -73,6 +73,7 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private PlayGenerator forwardAuto = new PlayGenerator("forwardAuto");
   private PlayGenerator rightAuto = new PlayGenerator("rightAuto");
+  private PlayGenerator leftAuto = new PlayGenerator("leftAuto");
   @Override
   public void robotInit() {
   
@@ -134,13 +135,9 @@ public class Robot extends TimedRobot {
         forwardAuto.addPlay((new AutoShoot(5, shooter, conveyor, vision , trajectory)));
         break;
       case kLeftAuto:
-        fowardAuto.addPlay((new AutoMove(drive, 1.5, -1.0)));
-        fowardAuto.addPlay((new AutoVisionAndTurn(drive, vision, 5)));
-        fowardAuto.addPlay((new AutoShoot(5, shooter, conveyor, camera, trajectory)));
-
-
-
-
+        leftAuto.addPlay((new AutoMove(drive, 1.5, -1.0)));
+        leftAuto.addPlay((new AutoVisionAndTurn(drive, vision, 5)));
+        leftAuto.addPlay((new AutoShoot(5, shooter, conveyor, vision, trajectory)));
         break;
       case kRightAuto:
         rightAuto.addPlay((new AutoMove(drive, 1.5, 1.0)));
