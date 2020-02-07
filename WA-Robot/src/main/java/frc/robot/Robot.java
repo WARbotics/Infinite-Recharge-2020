@@ -34,6 +34,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.common.Trajectory;
 import frc.robot.common.PlayGenerator;
 import frc.robot.common.AutoCommands.AutoMove;
+import frc.robot.common.AutoCommands.AutoShoot;
 import frc.robot.common.AutoCommands.AutoTurn;
 import frc.robot.common.AutoCommands.AutoShoot;
 import frc.robot.common.AutoCommands.AutoVisionAndTurn;
@@ -128,16 +129,16 @@ public class Robot extends TimedRobot {
         break;
       case kFowardAuto:
         fowardAuto.addPlay((new AutoMove(drive, 1.5, 1.0)));
-  
+        fowardAuto.addPlay((new AutoShoot(5, shooter, conveyor, vision , trajectory)));
         break;
       case kLeftAuto:
         break;
       case kRightAuto:
         rightAuto.addPlay((new AutoMove(drive, 1.5, 1.0)));
+        rightAuto.addPlay(new AutoTurn(drive, 1.5, 60));
         rightAuto.addPlay((new AutoVisionAndTurn(drive, vision, 1.0)));
-        autoShooter = new AutoShoot(1.25, shooter, conveyor, vision, trajectory);
+        rightAuto.addPlay(new AutoShoot(1.25, shooter, conveyor, vision, trajectory));
         break;
-      
   }
 
   @Override
@@ -204,7 +205,7 @@ public class Robot extends TimedRobot {
       conveyor.off();
     }
     */
-
+    /*
     if(input.driver.getRawButton(3)){
       conveyor.hardStopUp();
     }
@@ -212,7 +213,7 @@ public class Robot extends TimedRobot {
     if(input.driver.getRawButton(4)){
       conveyor.hardStopDown();
     }
-  
+    */
   }
 
 
