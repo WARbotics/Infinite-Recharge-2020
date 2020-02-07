@@ -134,6 +134,13 @@ public class Robot extends TimedRobot {
         forwardAuto.addPlay((new AutoShoot(5, shooter, conveyor, vision , trajectory)));
         break;
       case kLeftAuto:
+        fowardAuto.addPlay((new AutoMove(drive, 1.5, -1.0)));
+        fowardAuto.addPlay((new AutoVisionAndTurn(drive, vision, 5)));
+        fowardAuto.addPlay((new AutoShoot(5, shooter, conveyor, camera, trajectory)));
+
+
+
+
         break;
       case kRightAuto:
         rightAuto.addPlay((new AutoMove(drive, 1.5, 1.0)));
