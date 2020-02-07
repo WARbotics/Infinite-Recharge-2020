@@ -7,18 +7,14 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import com.playingwithfusion.TimeOfFlight;
-
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
 import frc.robot.components.Shooter;
@@ -26,17 +22,11 @@ import frc.robot.components.VisionCamera;
 import frc.robot.components.OI.DriveMode;
 import frc.robot.components.Intake;
 import frc.robot.components.Conveyor;
-
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-
 import frc.robot.common.Trajectory;
 import frc.robot.common.PlayGenerator;
 import frc.robot.common.AutoCommands.AutoMove;
 import frc.robot.common.AutoCommands.AutoShoot;
 import frc.robot.common.AutoCommands.AutoTurn;
-import frc.robot.common.AutoCommands.AutoShoot;
 import frc.robot.common.AutoCommands.AutoVisionAndTurn;
 
 import java.lang.Math;
@@ -62,7 +52,6 @@ public class Robot extends TimedRobot {
   private Shooter shooter;
   private TimeOfFlight ballSensor;
   private Conveyor conveyor;
-  private Autoshoot autoShooter;
   private static final double cpr = 360; // am-3132
   private static final double wheelDiameter = 6; // 6 inch wheel
   private static final String kDefaultAuto = "Default";
@@ -81,7 +70,6 @@ public class Robot extends TimedRobot {
     WPI_TalonSRX intakeMotor = new WPI_TalonSRX(5);
 
     //Drivetrain
-
     WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
     WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
@@ -92,10 +80,12 @@ public class Robot extends TimedRobot {
     rightEncoder.setDistancePerPulse(Math.PI * wheelDiameter / cpr);
     WPI_TalonSRX frontConveyor = new WPI_TalonSRX(4);
     WPI_TalonSRX backConveyor = new WPI_TalonSRX(3);
+    WPI_TalonSRX leftShooter = new WPI_TalonSRX(5);
+    WPI_TalonSRX rightShooter = new WPI_TalonSRX(6);
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
     drive = new Drivetrain(leftLeader, leftFollower, rightLeader, rightFollower, leftEncoder, rightEncoder);
-    ballSensor = new TimeOfFlight();
+    ballSensor = new TimeOfFlight(5);// Change based on can bus id
 
     Joystick drive = new Joystick(0);
     Joystick operator = new Joystick(1);
@@ -104,7 +94,7 @@ public class Robot extends TimedRobot {
     vision = new VisionCamera("SmartDashboard", "VisionCamera");
     vision.connect();
     trajectory = new Trajectory(37.0, 2.19,0.0);
-    shooter = new Shooter(leftEncoder, rightEncoder);
+    shooter = new Shooter(leftShooter, rightShooter);
     conveyor = new Conveyor(frontConveyor, backConveyor, ballSensor, 0.25);
     // Auto
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
@@ -145,6 +135,7 @@ public class Robot extends TimedRobot {
         rightAuto.addPlay((new AutoVisionAndTurn(drive, vision, 1.0)));
         rightAuto.addPlay(new AutoShoot(1.25, shooter, conveyor, vision, trajectory));
         break;
+    }
   }
 
   @Override
