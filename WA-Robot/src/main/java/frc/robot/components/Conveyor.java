@@ -1,9 +1,9 @@
 package frc.robot.components;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.playingwithfusion.TimeOfFlight;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+
 
 public class Conveyor{
     /*
@@ -19,19 +19,19 @@ public class Conveyor{
     private ConveyorMode mode = ConveyorMode.OFF;
     
 
-    private final WPI_TalonSRX frontConveyorMotor;
-    private final WPI_TalonSRX backConveyorMotor;
+    private final WPI_VictorSPX frontConveyorMotor;
+    private final WPI_VictorSPX backConveyorMotor;
     private TimeOfFlight ballSensor;
-    private double threshold = .25;
-    public Conveyor(WPI_TalonSRX frontConveyorMotor, WPI_TalonSRX backConveyorMotor, TimeOfFlight ballSensor, double threshold){
+    private double threshold = 0;
+    private DoubleSolenoid hardStop;
+    public Conveyor(WPI_VictorSPX frontConveyorMotor, WPI_VictorSPX backConveyorMotor, DoubleSolenoid hardStop, TimeOfFlight ballSensor, double threshold){
         this.frontConveyorMotor= frontConveyorMotor;
         this.backConveyorMotor= backConveyorMotor;
         this.ballSensor = ballSensor;
         this.threshold = threshold;
+        this.hardStop = hardStop;
      } 
-    
-    DoubleSolenoid hardStop = new DoubleSolenoid(1, 2);
-    
+
     
     public enum ConveyorMode {
         FORWARDS, BACKWARDS, OFF

@@ -1,6 +1,7 @@
 package frc.robot.components;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
@@ -14,21 +15,22 @@ public class Climber {
     Contributed By: Victor Henriksson
     NOTE: This not take into account multipal Talon Tach.
     */
-    private WPI_TalonSRX motor;
-    private DoubleSolenoid hook;
+    public WPI_VictorSPX motor;
+    public DoubleSolenoid hook;
     private boolean isClimberUp = false; 
-    public Climber(WPI_TalonSRX motor, DoubleSolenoid hook){
+    public Climber(WPI_VictorSPX motor, DoubleSolenoid hook){
         this.motor = motor;
         this.hook = hook;
-        this.motor.configFactoryDefault();
-        this.motor.configForwardLimitSwitchSource(LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen);
     }
 
     public void up(){
-        motor.set(ControlMode.MotionMagic, .25);
+        motor.set(ControlMode.PercentOutput, .25);
     }
     public void down(){
-        motor.set(ControlMode.MotionMagic, .25);
+        motor.set(ControlMode.PercentOutput, -.25);
+    }
+    public void off(){
+        motor.set(ControlMode.PercentOutput, 0);
     }
     public void sendHook(){
         hook.set(DoubleSolenoid.Value.kForward);

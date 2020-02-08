@@ -7,8 +7,11 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -28,6 +31,7 @@ import frc.robot.common.AutoCommands.AutoMove;
 import frc.robot.common.AutoCommands.AutoShoot;
 import frc.robot.common.AutoCommands.AutoTurn;
 import frc.robot.common.AutoCommands.AutoVisionAndTurn;
+import frc.robot.components.Climber;
 
 import java.lang.Math;
 /**
@@ -50,8 +54,8 @@ public class Robot extends TimedRobot {
   private VisionCamera vision; 
   private Trajectory trajectory;
   private Shooter shooter;
-  private TimeOfFlight ballSensor;
   private Conveyor conveyor;
+  private Climber climber;
   private static final double cpr = 360; // am-3132
   private static final double wheelDiameter = 6; // 6 inch wheel
   private static final String kDefaultAuto = "Default";
@@ -66,8 +70,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
   
-
-    WPI_TalonSRX intakeMotor = new WPI_TalonSRX(5);
+    //Intake
+    WPI_VictorSPX intakeMotor = new WPI_VictorSPX(5);
+    intake = new Intake(intakeMotor);
 
     //Drivetrain
     WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
@@ -78,24 +83,36 @@ public class Robot extends TimedRobot {
     Encoder rightEncoder = new Encoder(2,3);
     leftEncoder.setDistancePerPulse(Math.PI * wheelDiameter / cpr);
     rightEncoder.setDistancePerPulse(Math.PI * wheelDiameter / cpr);
-    WPI_TalonSRX frontConveyor = new WPI_TalonSRX(4);
-    WPI_TalonSRX backConveyor = new WPI_TalonSRX(3);
-    WPI_TalonSRX leftShooter = new WPI_TalonSRX(5);
-    WPI_TalonSRX rightShooter = new WPI_TalonSRX(6);
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
     drive = new Drivetrain(leftLeader, leftFollower, rightLeader, rightFollower, leftEncoder, rightEncoder);
-    ballSensor = new TimeOfFlight(5);// Change based on can bus id
+    //Conveyor
+    WPI_VictorSPX frontConveyor = new WPI_VictorSPX(4);
+    WPI_VictorSPX backConveyor = new WPI_VictorSPX(3);
+    DoubleSolenoid hardStop = new DoubleSolenoid(2, 3)
+    TimeOfFlight ballSensor = new TimeOfFlight(5); // Change based on can bus id
+    conveyor = new Conveyor(frontConveyor, backConveyor,hardStop, ballSensor, 0.25);
+    //Shooter
+    WPI_TalonSRX leftShooter = new WPI_TalonSRX(2);
+    WPI_TalonSRX rightShooter = new WPI_TalonSRX(3);
+    shooter = new Shooter(leftShooter, rightShooter);
 
+    // Input
     Joystick drive = new Joystick(0);
     Joystick operator = new Joystick(1);
     input = new OI(drive, operator);
-    intake = new Intake(intakeMotor);
+
+    // Vision
     vision = new VisionCamera("SmartDashboard", "VisionCamera");
     vision.connect();
+    
+    //Trajectory
     trajectory = new Trajectory(37.0, 2.19,0.0);
-    shooter = new Shooter(leftShooter, rightShooter);
-    conveyor = new Conveyor(frontConveyor, backConveyor, ballSensor, 0.25);
+    
+    // Climber
+    WPI_VictorSPX climberMotor = new WPI_VictorSPX(6);
+    DoubleSolenoid climberPnumatics = new DoubleSolenoid(0,1);
+    climber = new Climber(climberMotor, climberPnumatics);
     // Auto
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("Foward Auto", kFowardAuto);
@@ -151,6 +168,7 @@ public class Robot extends TimedRobot {
     double zRotation = input.driver.getRawAxis(2);
     double rightDriveY = input.driver.getRawAxis(3);
     SmartDashboard.putString("Drivemode", input.getDriveMode().name());
+
     if (input.getDriveMode() == DriveMode.SPEED) {
       // Speed
     } else if (input.getDriveMode() == DriveMode.PRECISION) {
@@ -166,7 +184,6 @@ public class Robot extends TimedRobot {
           drive.curveDrive(-driveY, zRotation, false);
         }
     }
-
     // Set driver modes
     if (input.driver.getRawButton(1)) {
       // Set Speed Mode
@@ -179,38 +196,30 @@ public class Robot extends TimedRobot {
       input.setDriveMode(DriveMode.DEFAULT);
     }
 
-
-    
-    
-    
-    
-    
-
-    if(input.driver.getRawButton(1)){
-        intake.on();
-        //conveyor.on();
-    } else{
-      
-        intake.off();
-        //conveyor.off();
+    //Intake
+    if(input.driver.getRawButton(7)){
+      intake.on();
+    }else{
+      intake.off();
+    }
+    //Shooter
+    if(input.operator.getRawButton(1)){
+      // Shooter
+    }
+    //Climber
+    if(input.operator.getRawButton(3)){
 
     }
-    /*
-    if(input.driver.getRawButton(2)){
-      conveyor.backwards();
+    // Climber Pnuematics 
+    if(input.operator.getRawButton(4)){
+
+    }
+    //Conveyor Belt
+    if(input.operator.getRawButton(2)){
+      conveyor.on();
     }else{
       conveyor.off();
     }
-    */
-    /*
-    if(input.driver.getRawButton(3)){
-      conveyor.hardStopUp();
-    }
-
-    if(input.driver.getRawButton(4)){
-      conveyor.hardStopDown();
-    }
-    */
   }
 
 

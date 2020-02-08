@@ -2,6 +2,7 @@ package frc.robot.components;
 
 
     import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 
     
@@ -16,9 +17,9 @@ public class Intake{
     private Boolean intakeRunning = false;
     
 
-    private final WPI_TalonSRX intake;
-    public Intake(final WPI_TalonSRX intake){
-    this.intake= intake;
+    private WPI_VictorSPX intake;
+    public Intake(WPI_VictorSPX intake){
+        this.intake = intake;
 
     }
     public Boolean isIntakeRunning(){
