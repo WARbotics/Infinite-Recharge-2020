@@ -89,7 +89,7 @@ public class Robot extends TimedRobot {
     //Conveyor
     WPI_VictorSPX frontConveyor = new WPI_VictorSPX(4);
     WPI_VictorSPX backConveyor = new WPI_VictorSPX(3);
-    DoubleSolenoid hardStop = new DoubleSolenoid(2, 3)
+    DoubleSolenoid hardStop = new DoubleSolenoid(2, 3);
     TimeOfFlight ballSensor = new TimeOfFlight(5); // Change based on can bus id
     conveyor = new Conveyor(frontConveyor, backConveyor,hardStop, ballSensor, 0.25);
     //Shooter
@@ -217,6 +217,11 @@ public class Robot extends TimedRobot {
     //Conveyor Belt
     if(input.operator.getRawButton(2)){
       conveyor.on();
+    }else{
+      conveyor.off();
+    }
+    if(input.operator.getRawButton(5)){
+      conveyor.backwards();
     }else{
       conveyor.off();
     }
