@@ -197,22 +197,32 @@ public class Robot extends TimedRobot {
     }
 
     //Intake
-    if(input.driver.getRawButton(7)){
+    if(input.driver.getRawButton(1)){
       intake.on();
     }else{
       intake.off();
     }
     //Shooter
-    if(input.operator.getRawButton(1)){
+    if(input.operator.getRawButton(2)){
       // Shooter
     }
     //Climber
     if(input.operator.getRawButton(3)){
-
+      climber.up();
+    }else{
+      climber.off();
+    }
+    if(input.operator.getRawButton(6)){
+      climber.down();
+    }else{
+      climber.off();
     }
     // Climber Pnuematics 
     if(input.operator.getRawButton(4)){
-
+      climber.sendHook();
+    }
+    if(input.operator.getRawButton(7)){
+      climber.retrieveHook();
     }
     //Conveyor Belt
     if(input.operator.getRawButton(2)){
