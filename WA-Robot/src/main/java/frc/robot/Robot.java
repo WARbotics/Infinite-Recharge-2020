@@ -212,25 +212,25 @@ public class Robot extends TimedRobot {
     }else{
       climber.off();
     }
-    if(input.operator.getRawButton(6)){
+    if(input.operator.getRawButton(4)){
       climber.down();
     }else{
       climber.off();
     }
     // Climber Pnuematics 
-    if(input.operator.getRawButton(4)){
+    if(input.operator.getRawButton(5)){
       climber.sendHook();
     }
-    if(input.operator.getRawButton(7)){
+    if(input.operator.getRawButton(6)){
       climber.retrieveHook();
     }
     //Conveyor Belt
-    if(input.operator.getRawButton(2)){
+    if(input.operator.getRawButton(7)){
       conveyor.on();
     }else{
       conveyor.off();
     }
-    if(input.operator.getRawButton(5)){
+    if(input.operator.getRawButton(8)){
       conveyor.backwards();
     }else{
       conveyor.off();
