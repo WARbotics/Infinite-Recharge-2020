@@ -61,7 +61,7 @@ public class Robot extends TimedRobot {
   private Shooter shooter;
   private TimeOfFlight ballSensor;
   private Conveyor conveyor;
-  private Autoshoot autoShooter;
+  private AutoShoot autoShooter;
   private static final double cpr = 360; // am-3132
   private static final double wheelDiameter = 6; // 6 inch wheel
   private static final String kDefaultAuto = "Default";
@@ -89,12 +89,12 @@ public class Robot extends TimedRobot {
     Encoder rightEncoder = new Encoder(2,3);
     leftEncoder.setDistancePerPulse(Math.PI * wheelDiameter / cpr);
     rightEncoder.setDistancePerPulse(Math.PI * wheelDiameter / cpr);
-    WPI_TalonSRX frontConveyor = new WPI_TalonSRX(4);
-    WPI_TalonSRX backConveyor = new WPI_TalonSRX(3);
+    WPI_VictorSPX frontConveyor = new WPI_VictorSPX(4);
+    WPI_VictorSPX backConveyor = new WPI_VictorSPX(3);
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
     drive = new Drivetrain(leftLeader, leftFollower, rightLeader, rightFollower, leftEncoder, rightEncoder);
-    ballSensor = new TimeOfFlight();
+    ballSensor = new TimeOfFlight(0);
 
     Joystick drive = new Joystick(0);
     Joystick operator = new Joystick(1);
@@ -103,8 +103,11 @@ public class Robot extends TimedRobot {
     vision = new VisionCamera("SmartDashboard", "VisionCamera");
     vision.connect();
     trajectory = new Trajectory(37.0, 2.19,0.0);
-    shooter = new Shooter(leftEncoder, rightEncoder);
-    conveyor = new Conveyor(frontConveyor, backConveyor, ballSensor, 0.25);
+    WPI_TalonSRX leftShooter = new WPI_TalonSRX(5);
+    WPI_TalonSRX rightShooter = new WPI_TalonSRX(6);
+    shooter = new Shooter(leftShooter, rightShooter);
+    DoubleSolenoid hardStop = new DoubleSolenoid(0,1);
+    conveyor = new Conveyor(frontConveyor, backConveyor, hardStop, ballSensor, 0.25);
     // Auto
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("Foward Auto", kFowardAuto);
@@ -144,6 +147,7 @@ public class Robot extends TimedRobot {
         rightAuto.addPlay((new AutoVisionAndTurn(drive, vision, 5)));
         rightAuto.addPlay(new AutoShoot(5, shooter, conveyor, vision, trajectory));
         break;
+    }
   }
 
   @Override
@@ -209,10 +213,11 @@ public class Robot extends TimedRobot {
     }
     //Shooter
     if(input.operator.getRawButton(2)){
-      Autoshoot autoShoot = new AutoShoot(1.00, shooter, conveyor, vision, trajectory);
-      autoShoot.comand();
+      AutoShoot autoShoot = new AutoShoot(1.00, shooter, conveyor, vision, trajectory);
+      autoShoot.command();
     }
     //Climber
+    /*
     if(input.operator.getRawButton(3)){
       climber.up();
     }else{
@@ -230,6 +235,7 @@ public class Robot extends TimedRobot {
     if(input.operator.getRawButton(6)){
       climber.retrieveHook();
     }
+    */
    //Conveyor Belt
     if(input.operator.getRawButton(7)){
       conveyor.on();
