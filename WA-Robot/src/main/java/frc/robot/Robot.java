@@ -207,21 +207,21 @@ public class Robot extends TimedRobot {
       // Shooter
     }
     //Climber
-    if(input.driver.getRawButton(3)){
+    if(input.operator.getRawButton(3)){
       climber.up();
     }else{
       climber.off();
     }
-    if(input.driver.getRawButton(4)){
+    if(input.operator.getRawButton(4)){
       climber.down();
     }else{
       climber.off();
     }
     // Climber Pnuematics 
-    if(input.driver.getRawButton(5)){
+    if(input.operator.getRawButton(5)){
       climber.sendHook();
     }
-    if(input.driver.getRawButton(6)){
+    if(input.operator.getRawButton(6)){
       climber.retrieveHook();
     }
    //Conveyor Belt
@@ -234,6 +234,11 @@ public class Robot extends TimedRobot {
       conveyor.backwards();
     }else{
       conveyor.off();
+    }
+    if(input.operator.getRawButton(9)){
+      conveyor.hardStopDown();
+    }else{
+      conveyor.hardStopDown();
     }
     
   }
