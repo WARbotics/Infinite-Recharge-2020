@@ -33,9 +33,9 @@ public class AutoShoot extends AutoCommand {
     public void command(){
         shooter.setVelocity(trajectory.getVeloctiy(camera.getDistance()));
         if(shooter.isReady()){
-            // Add hard stop code here 
+            conveyor.hardStopUp();
             conveyor.on();
-        }else{
+        } else {
             conveyor.off();
         }
     }
