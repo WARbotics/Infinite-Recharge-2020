@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
     double rightDriveY = input.driver.getRawAxis(3);
 
     SmartDashboard.putString("Drivemode", input.getDriveMode().name());
-    
+    /*
     if (input.getDriveMode() == DriveMode.SPEED) {
       // Speed
     } else if (input.getDriveMode() == DriveMode.PRECISION) {
@@ -94,21 +94,32 @@ public class Robot extends TimedRobot {
           drive.curveDrive(-driveY, zRotation, false);
         }
     }
-
+    */
     if(input.driver.getRawButton(1)){
-      leftLeader.set(.25);
+      leftLeader.set(1);
     }else if(input.driver.getRawButton(2)){
-      leftFollower.set(.25);
+      leftFollower.set(1);
     }else if(input.driver.getRawButton(3)){
-      rightLeader.set(.25);
+      rightLeader.set(1);
     }else if(input.driver.getRawButton(4)){
-      rightFollower.set(.25);
+      rightFollower.set(-1);
     }else{
       leftLeader.set(0);
       leftFollower.set(0);
       rightLeader.set(0);
       rightFollower.set(0);
     }
+    if(input.driver.getRawButton(8)){
+      leftFollower.set(1);
+      rightLeader.set(1);
+      rightFollower.set(-1);
+    }else{
+      rightFollower.set(0);
+      rightLeader.set(0);
+      leftFollower.set(0);
+    }
+
+
 
   }
 
