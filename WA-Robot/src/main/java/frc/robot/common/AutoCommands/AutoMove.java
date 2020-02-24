@@ -35,7 +35,7 @@ public class AutoMove extends AutoCommand{
 
     public void command(){
         PID.setPoint(setPoint);
-        PID.setActual(drive.getDistance());
+        //PID.setActual(drive.getDistance());
         drive.drive.arcadeDrive(PID.getRate(), 0);
 
         

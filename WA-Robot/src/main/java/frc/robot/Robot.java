@@ -28,7 +28,7 @@ import frc.robot.components.VisionCamera;
 import frc.robot.components.OI.DriveMode;
 import frc.robot.components.Intake;
 import frc.robot.components.Conveyor;
-
+import frc.robot.components.Climber;
 import frc.robot.common.Trajectory;
 import frc.robot.common.PlayGenerator;
 import frc.robot.common.AutoCommands.AutoMove;
@@ -36,7 +36,7 @@ import frc.robot.common.AutoCommands.AutoShoot;
 import frc.robot.common.AutoCommands.AutoTurn;
 
 import frc.robot.common.AutoCommands.AutoVisionAndTurn;
-import frc.robot.components.Climber;
+
 
 import java.lang.Math;
 /**
@@ -56,12 +56,13 @@ public class Robot extends TimedRobot {
   private Intake intake;
   private Drivetrain drive;
   private OI input;
+  WPI_TalonSRX leftShooter;
+  WPI_TalonSRX rightShooter;
   private VisionCamera vision; 
   private Trajectory trajectory;
   private Shooter shooter;
-  private TimeOfFlight ballSensor;
   private Conveyor conveyor;
-  private AutoShoot autoShooter;
+  private Climber climber;
   private static final double cpr = 360; // am-3132
   private static final double wheelDiameter = 6; // 6 inch wheel
   private static final String kDefaultAuto = "Default";
@@ -77,37 +78,46 @@ public class Robot extends TimedRobot {
   public void robotInit() {
   
     //Intake
-    WPI_VictorSPX intakeMotor = new WPI_VictorSPX(5);
+    WPI_VictorSPX intakeMotor = new WPI_VictorSPX(1);//
     intake = new Intake(intakeMotor);
     //Drivetrain
-
-    WPI_TalonSRX leftLeader = new WPI_TalonSRX(0);
-    WPI_VictorSPX leftFollower = new WPI_VictorSPX(1);
-    WPI_TalonSRX rightLeader = new WPI_TalonSRX(1);
-    WPI_TalonSRX rightFollower = new WPI_TalonSRX(2);
-    Encoder leftEncoder = new Encoder(0,1);
-    Encoder rightEncoder = new Encoder(2,3);
-    leftEncoder.setDistancePerPulse(Math.PI * wheelDiameter / cpr);
-    rightEncoder.setDistancePerPulse(Math.PI * wheelDiameter / cpr);
-    WPI_VictorSPX frontConveyor = new WPI_VictorSPX(4);
-    WPI_VictorSPX backConveyor = new WPI_VictorSPX(3);
+    WPI_TalonSRX leftLeader = new WPI_TalonSRX(0); //
+    WPI_VictorSPX leftFollower = new WPI_VictorSPX(5);//
+    WPI_TalonSRX rightLeader = new WPI_TalonSRX(1); //
+    WPI_VictorSPX rightFollower = new WPI_VictorSPX(4);//
+    //Encoder leftEncoder = new Encoder(0,1);
+    //Encoder rightEncoder = new Encoder(2,3);
+    //leftEncoder.setDistancePerPulse(Math.PI * wheelDiameter / cpr);
+    //rightEncoder.setDistancePerPulse(Math.PI * wheelDiameter / cpr);
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);
-    drive = new Drivetrain(leftLeader, leftFollower, rightLeader, rightFollower, leftEncoder, rightEncoder);
-    ballSensor = new TimeOfFlight(0);
+    drive = new Drivetrain(leftLeader, leftFollower, rightLeader, rightFollower /*,leftEncoder, rightEncoder*/);
 
+    WPI_VictorSPX conveyorMotor = new WPI_VictorSPX(2);//
+    //TimeOfFlight ballSensor = new TimeOfFlight(0);
+    DoubleSolenoid hardStop = new DoubleSolenoid(0, 1);
+    conveyor = new Conveyor(conveyorMotor, hardStop, .25);
+    //conveyor = new Conveyor(conveyorMotor, hardStop, ballSensor, 0.25);
+
+    // Input
     Joystick drive = new Joystick(0);
     Joystick operator = new Joystick(1);
     input = new OI(drive, operator);
     intake = new Intake(intakeMotor);
+    //Vision
     vision = new VisionCamera("SmartDashboard", "VisionCamera");
     vision.connect();
-    trajectory = new Trajectory(37.0, 2.19,0.0);
-    WPI_TalonSRX leftShooter = new WPI_TalonSRX(5);
-    WPI_TalonSRX rightShooter = new WPI_TalonSRX(6);
-    shooter = new Shooter(leftShooter, rightShooter);
-    DoubleSolenoid hardStop = new DoubleSolenoid(0,1);
-    conveyor = new Conveyor(frontConveyor, backConveyor, hardStop, ballSensor, 0.25);
+    //Shooter
+    trajectory = new Trajectory(35.0, 2.19,0.0);
+    leftShooter = new WPI_TalonSRX(3);
+    rightShooter = new WPI_TalonSRX(2);
+    //shooter = new Shooter(leftShooter, rightShooter);
+    
+    ///Climber 
+    WPI_VictorSPX climbingArm = new WPI_VictorSPX(0);//
+    WPI_VictorSPX winch = new WPI_VictorSPX(3); //
+    DoubleSolenoid hook = new DoubleSolenoid(2, 3);
+    climber = new Climber(climbingArm,hook, winch);
     // Auto
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("Foward Auto", kFowardAuto);
@@ -126,6 +136,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
+    /*
     switch(m_autoSelected){
       case kDefaultAuto:
         
@@ -148,6 +159,7 @@ public class Robot extends TimedRobot {
         rightAuto.addPlay(new AutoShoot(5, shooter, conveyor, vision, trajectory));
         break;
     }
+    */
   }
 
   @Override
@@ -172,23 +184,11 @@ public class Robot extends TimedRobot {
       // make turning senetive but forward about .50
     } else {
       // Default
-      if (input.driver.getRawButton(5)) {
+      if (input.driver.getRawButton(6)) {
           drive.curveDrive(-driveY, zRotation, true);
       }else {
           drive.curveDrive(-driveY, zRotation, false);
         }
-    }
-
-    // Set driver modes
-    if (input.driver.getRawButton(1)) {
-      // Set Speed Mode
-      input.setDriveMode(DriveMode.SPEED);      
-    } else if (input.driver.getRawButton(2)) {
-      // Precision
-      input.setDriveMode(DriveMode.PRECISION);
-    } else if (input.driver.getRawButton(3)) {
-      // Default
-      input.setDriveMode(DriveMode.DEFAULT);
     }
     
     
@@ -206,53 +206,61 @@ public class Robot extends TimedRobot {
     }
 
     //Intake
-    if(input.driver.getRawButton(1)){
+    if(input.driver.getRawButton(4)){
       intake.on();
     }else{
       intake.off();
     }
     //Shooter
-    if(input.operator.getRawButton(2)){
-      AutoShoot autoShoot = new AutoShoot(1.00, shooter, conveyor, vision, trajectory);
-      autoShoot.command();
+    if(input.driver.getRawButton(5)){
+      leftShooter.set(-1);
+      rightShooter.set(1);
+
+      /*
+      shooter.setVelocity(trajectory.getVeloctiy(vision.getDistance()));
+      if(shooter.isReady()){
+        conveyor.hardStopDown();
+        conveyor.on();
+        System.out.println("FIRE!");
+        SmartDashboard.putBoolean("Is Shooter ready", shooter.isReady());
+      }
+      */
+    }else{
+      leftShooter.set(0);
+      rightShooter.set(0);
+      //shooter.off();
     }
-    //Climber
-    /*
+    //Conyevor 
     if(input.operator.getRawButton(3)){
-      climber.up();
-    }else{
-      climber.off();
-    }
-    if(input.operator.getRawButton(4)){
-      climber.down();
-    }else{
-      climber.off();
-    }
-    // Climber Pnuematics 
-    if(input.operator.getRawButton(5)){
-      climber.sendHook();
-    }
-    if(input.operator.getRawButton(6)){
-      climber.retrieveHook();
-    }
-    */
-   //Conveyor Belt
-    if(input.operator.getRawButton(7)){
       conveyor.on();
     }else{
       conveyor.off();
     }
+    if(input.operator.getRawButton(2)){
+      conveyor.hardStopDown();
+    }else{
+      conveyor.hardStopUp();
+    }
+    //Climber
     if(input.operator.getRawButton(8)){
-      conveyor.backwards();
+      climber.winch.set(ControlMode.PercentOutput, .75);
     }else{
-      conveyor.off();
+      climber.winch.set(0);
     }
-    if(input.operator.getRawButton(9)){
-      conveyor.hardStopDown();
+    if(input.operator.getRawButton(10)){
+      climber.up();
     }else{
-      conveyor.hardStopDown();
+      climber.off();
     }
-    
+    if(input.operator.getRawButton(11)){
+      climber.sendHook();
+    }
+    if(input.operator.getRawButton(12)){
+      climber.winch.set(-.25);
+    }else{
+      climber.winchOff();
+    }
+
   }
 
 

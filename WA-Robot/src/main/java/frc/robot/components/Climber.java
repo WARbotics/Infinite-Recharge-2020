@@ -15,12 +15,14 @@ public class Climber {
     Contributed By: Victor Henriksson
     NOTE: This not take into account multipal Talon Tach.
     */
-    public WPI_VictorSPX motor;
-    public DoubleSolenoid hook;
+    private WPI_VictorSPX motor;
+    private DoubleSolenoid hook;
+    public WPI_VictorSPX winch;
     private boolean isClimberUp = false; 
-    public Climber(WPI_VictorSPX motor, DoubleSolenoid hook){
+    public Climber(WPI_VictorSPX motor, DoubleSolenoid hook, WPI_VictorSPX winch){
         this.motor = motor;
         this.hook = hook;
+        this.winch = winch;
     }
 
     public void up(){
@@ -37,6 +39,12 @@ public class Climber {
     }
     public void retrieveHook(){
         hook.set(DoubleSolenoid.Value.kReverse);
+    }
+    public void winchOn(){
+        winch.set(ControlMode.PercentOutput, 1);
+    }
+    public void winchOff(){
+        winch.set(ControlMode.PercentOutput, 0);
     }
 
 }

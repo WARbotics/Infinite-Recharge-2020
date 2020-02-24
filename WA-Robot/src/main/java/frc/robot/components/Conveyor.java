@@ -19,18 +19,23 @@ public class Conveyor{
     private ConveyorMode mode = ConveyorMode.OFF;
     
 
-    private final WPI_VictorSPX frontConveyorMotor;
-    private final WPI_VictorSPX backConveyorMotor;
-    private TimeOfFlight ballSensor;
+    private final WPI_VictorSPX motor;
+    //private TimeOfFlight ballSensor;
     private double threshold = 0;
     private DoubleSolenoid hardStop;
-    public Conveyor(WPI_VictorSPX frontConveyorMotor, WPI_VictorSPX backConveyorMotor, DoubleSolenoid hardStop, TimeOfFlight ballSensor, double threshold){
-        this.frontConveyorMotor= frontConveyorMotor;
-        this.backConveyorMotor= backConveyorMotor;
+    public Conveyor(WPI_VictorSPX motor, DoubleSolenoid hardStop, double threshold){
+        this.motor = motor;
+        this.threshold = threshold; 
+        this.hardStop = hardStop;
+    }
+    /*
+    public Conveyor(WPI_VictorSPX motor, DoubleSolenoid hardStop, TimeOfFlight ballSensor, double threshold){
+        this.motor = motor;
         this.ballSensor = ballSensor;
         this.threshold = threshold;
         this.hardStop = hardStop;
      } 
+     */
 
     
     public enum ConveyorMode {
@@ -46,21 +51,18 @@ public class Conveyor{
     }
 
     public void on(){
-        frontConveyorMotor.set(1);
-        backConveyorMotor.set(1);
+        motor.set(1);
         mode = ConveyorMode.FORWARDS;
     
 
     }
     public void off(){
-        frontConveyorMotor.set(0);
-        backConveyorMotor.set(0);
+        motor.set(0);
         mode = ConveyorMode.OFF;
     }
 
     public void backwards(){
-        frontConveyorMotor.set(-1);
-        backConveyorMotor.set(-1);
+        motor.set(-1);
         mode = ConveyorMode.BACKWARDS;
     
     }
@@ -73,6 +75,7 @@ public class Conveyor{
         hardStop.set(DoubleSolenoid.Value.kReverse);
     }
     
+    /*
     public void ballDist(){
         ballSensor.getRange();
     }
@@ -81,9 +84,9 @@ public class Conveyor{
         if(ballSensor.getRange() < threshold){
             return true;
         }
-    return false;
+        return false;
     
     }
-    
+    */
     
 }
