@@ -260,6 +260,9 @@ public class Robot extends TimedRobot {
     }else{
       climber.winchOff();
     }
+    if(input.operator.getRawButton(9)){
+      climber.retrieveHook();
+    }
 
   }
 
