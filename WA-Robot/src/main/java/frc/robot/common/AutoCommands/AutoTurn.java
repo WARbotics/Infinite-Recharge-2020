@@ -4,7 +4,7 @@ import frc.robot.common.AutoCommand;
 import frc.robot.components.Drivetrain;
 import frc.robot.common.PID;
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.SPI;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -22,10 +22,10 @@ public class AutoTurn extends AutoCommand{
     private PID PID = new PID(0.10, 0.00, 0.0);
 
     private double angle = 0.0;
-    private double ROBOT_RADIUS = 3.1415926;
-    public AutoTurn(Drivetrain drive, double time, double setAngle) {
+    private double ROBOT_RADIUS = 3.1415926; //Turning radius of the robot that will need to change based on the measured radius of the robot
+    public AutoTurn(Drivetrain drive, double time, double setAngle, AHRS navX) {
         super("AutoTurn", time);
-        ahrsDevice = new AHRS(SPI.Port.kMXP);
+        ahrsDevice = navX;
         this.drive = drive;
         this.angle = setAngle;
     }

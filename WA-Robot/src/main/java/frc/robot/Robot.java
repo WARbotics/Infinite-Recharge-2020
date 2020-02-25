@@ -16,11 +16,13 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.SerialPort.Port;
+
 import com.playingwithfusion.TimeOfFlight;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import com.kauailabs.navx.frc.AHRS;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.OI;
 import frc.robot.components.Shooter;
@@ -63,6 +65,7 @@ public class Robot extends TimedRobot {
   private Shooter shooter;
   private Conveyor conveyor;
   private Climber climber;
+  private AHRS navXMicro; 
   private static final double cpr = 360; // am-3132
   private static final double wheelDiameter = 6; // 6 inch wheel
   private static final String kDefaultAuto = "Default";
@@ -95,7 +98,7 @@ public class Robot extends TimedRobot {
 
     WPI_VictorSPX conveyorMotor = new WPI_VictorSPX(2);//
     //TimeOfFlight ballSensor = new TimeOfFlight(0);
-    DoubleSolenoid hardStop = new DoubleSolenoid(0, 1);
+    DoubleSolenoid hardStop = new DoubleSolenoid(2, 3);
     conveyor = new Conveyor(conveyorMotor, hardStop, .25);
     //conveyor = new Conveyor(conveyorMotor, hardStop, ballSensor, 0.25);
 
@@ -108,15 +111,15 @@ public class Robot extends TimedRobot {
     vision = new VisionCamera("SmartDashboard", "VisionCamera");
     vision.connect();
     //Shooter
-    trajectory = new Trajectory(35.0, 2.19,0.0);
+    trajectory = new Trajectory(35.0, .19, 5);
     leftShooter = new WPI_TalonSRX(3);
     rightShooter = new WPI_TalonSRX(2);
-    //shooter = new Shooter(leftShooter, rightShooter);
+    shooter = new Shooter(leftShooter, rightShooter,1);
     
     ///Climber 
     WPI_VictorSPX climbingArm = new WPI_VictorSPX(0);//
     WPI_VictorSPX winch = new WPI_VictorSPX(3); //
-    DoubleSolenoid hook = new DoubleSolenoid(2, 3);
+    DoubleSolenoid hook = new DoubleSolenoid(0, 1);
     climber = new Climber(climbingArm,hook, winch);
     // Auto
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
@@ -125,25 +128,28 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Right Auto", kRightAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
     
+    //NavX
+    navXMicro = new AHRS(Port.kUSB);
+    navXMicro.calibrate();
   }
 
   @Override
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+     m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
   }
 
   @Override
   public void autonomousPeriodic() {
-    /*
+
     switch(m_autoSelected){
       case kDefaultAuto:
         
         break;
       case kFowardAuto:
         forwardAuto.addPlay((new AutoMove(drive, 1.5, 1.0)));
-        forwardAuto.addPlay((new AutoTurn(drive, 2, 45)));
+        forwardAuto.addPlay((new AutoTurn(drive, 2, 45, navXMicro)));
         forwardAuto.addPlay((new AutoVisionAndTurn(drive, vision, 5)));
         forwardAuto.addPlay((new AutoShoot(5, shooter, conveyor, vision , trajectory)));
         break;
@@ -154,12 +160,11 @@ public class Robot extends TimedRobot {
         break;
       case kRightAuto:
         rightAuto.addPlay((new AutoMove(drive, 1.5, 1.0)));
-        rightAuto.addPlay(new AutoTurn(drive, 1.5, 60));
+        rightAuto.addPlay(new AutoTurn(drive, 1.5, 60, navXMicro));
         rightAuto.addPlay((new AutoVisionAndTurn(drive, vision, 5)));
         rightAuto.addPlay(new AutoShoot(5, shooter, conveyor, vision, trajectory));
         break;
     }
-    */
   }
 
   @Override
@@ -213,22 +218,17 @@ public class Robot extends TimedRobot {
     }
     //Shooter
     if(input.driver.getRawButton(5)){
-      leftShooter.set(-1);
-      rightShooter.set(1);
-
-      /*
       shooter.setVelocity(trajectory.getVeloctiy(vision.getDistance()));
+      SmartDashboard.putBoolean("Is Shooter ready", shooter.isReady());
       if(shooter.isReady()){
         conveyor.hardStopDown();
         conveyor.on();
         System.out.println("FIRE!");
-        SmartDashboard.putBoolean("Is Shooter ready", shooter.isReady());
       }
-      */
+
     }else{
-      leftShooter.set(0);
-      rightShooter.set(0);
-      //shooter.off();
+
+      shooter.off();
     }
     //Conyevor 
     if(input.operator.getRawButton(3)){
@@ -243,7 +243,7 @@ public class Robot extends TimedRobot {
     }
     //Climber
     if(input.operator.getRawButton(8)){
-      climber.winch.set(ControlMode.PercentOutput, .75);
+      climber.winch.set(ControlMode.PercentOutput, 1);
     }else{
       climber.winch.set(0);
     }
@@ -256,7 +256,7 @@ public class Robot extends TimedRobot {
       climber.sendHook();
     }
     if(input.operator.getRawButton(12)){
-      climber.winch.set(-.25);
+      climber.winch.set(-1);
     }else{
       climber.winchOff();
     }

@@ -1,10 +1,11 @@
 package frc.robot.common;
 
 public class PID {
-    double P, I, D;
-    double setPoint = 0;
-    double integral, previous_error;
-    double rate;
+    private double P, I, D;
+    private double setPoint = 0;
+    private double integral, previous_error;
+    private double rate;
+    private double error = 0;
 
     public PID(double P, double I, double D) {
         this.P = P;
@@ -17,12 +18,14 @@ public class PID {
     }
 
     public void setActual(double actual) {
-        double error = (setPoint - actual);
+        this.error = (setPoint - actual);
         this.integral += (error * I);
         double derivative = (error - this.previous_error) / .02;
         this.rate = (P * error) + (I * this.integral) + (D * derivative);
     }
-
+    public double getError(){
+        return this.error;
+    }
     public double getRate() {
         return this.rate;
     }

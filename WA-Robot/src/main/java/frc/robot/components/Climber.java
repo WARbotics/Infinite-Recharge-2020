@@ -26,10 +26,10 @@ public class Climber {
     }
 
     public void up(){
-        motor.set(ControlMode.PercentOutput, .25);
+        motor.set(ControlMode.PercentOutput, 1);
     }
     public void down(){
-        motor.set(ControlMode.PercentOutput, -.25);
+        motor.set(ControlMode.PercentOutput, -1);
     }
     public void off(){
         motor.set(ControlMode.PercentOutput, 0);
