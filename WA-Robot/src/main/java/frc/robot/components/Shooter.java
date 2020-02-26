@@ -15,7 +15,7 @@ public class Shooter {
     private PID shooterLeftPID = new PID(.2, 0.0, 0.0);
     private PID shooterRightPID = new PID(.2, 0.0, 0.0);
     private double leftSpeed = 0.0; 
-    prviate double rightSpeed = 0.0;
+    private double rightSpeed = 0.0;
     public Shooter(WPI_TalonSRX motorLeft, WPI_TalonSRX motorRight, double syncThreshold) {
 
         // Set up Mag Encoders
