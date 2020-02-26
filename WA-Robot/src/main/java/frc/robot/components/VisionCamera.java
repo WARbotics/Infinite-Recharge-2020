@@ -21,7 +21,10 @@ public class VisionCamera{
     }
 
     public void connect(){
-        table = NetworkTableInstance.getDefault().getTable(this.tableName).getSubTable(this.cameraName);
+        System.out.println("Connecting");
+
+        NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
+        table = tableInstance.getTable(this.tableName).getSubTable(this.cameraName);
         isConnected = true; 
     }
     

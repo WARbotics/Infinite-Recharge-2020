@@ -12,6 +12,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
@@ -38,9 +40,10 @@ import frc.robot.common.AutoCommands.AutoShoot;
 import frc.robot.common.AutoCommands.AutoTurn;
 
 import frc.robot.common.AutoCommands.AutoVisionAndTurn;
-
+import frc.robot.common.AutoCommands.FollowVision;
 
 import java.lang.Math;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -52,20 +55,19 @@ public class Robot extends TimedRobot {
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
-  */
+   */
 
-  
   private Intake intake;
   private Drivetrain drive;
   private OI input;
   WPI_TalonSRX leftShooter;
   WPI_TalonSRX rightShooter;
-  private VisionCamera vision; 
+  private VisionCamera vision;
   private Trajectory trajectory;
   private Shooter shooter;
   private Conveyor conveyor;
   private Climber climber;
-  private AHRS navXMicro; 
+  private AHRS navXMicro;
   private static final double cpr = 360; // am-3132
   private static final double wheelDiameter = 6; // 6 inch wheel
   private static final String kDefaultAuto = "Default";
@@ -77,17 +79,19 @@ public class Robot extends TimedRobot {
   private PlayGenerator forwardAuto = new PlayGenerator("forwardAuto");
   private PlayGenerator rightAuto = new PlayGenerator("rightAuto");
   private PlayGenerator leftAuto = new PlayGenerator("leftAuto");
+  FollowVision test = new FollowVision(drive, vision, 3);
+
   @Override
   public void robotInit() {
   
     //Intake
-    WPI_VictorSPX intakeMotor = new WPI_VictorSPX(1);//
+    WPI_VictorSPX intakeMotor = new WPI_VictorSPX(1); //
     intake = new Intake(intakeMotor);
     //Drivetrain
-    WPI_TalonSRX leftLeader = new WPI_TalonSRX(0); //
+    WPI_TalonSRX leftLeader = new WPI_TalonSRX(3);  //
     WPI_VictorSPX leftFollower = new WPI_VictorSPX(5);//
-    WPI_TalonSRX rightLeader = new WPI_TalonSRX(1); //
-    WPI_VictorSPX rightFollower = new WPI_VictorSPX(4);//
+    WPI_TalonSRX rightLeader = new WPI_TalonSRX(0); //
+    WPI_VictorSPX rightFollower = new WPI_VictorSPX(3);//
     //Encoder leftEncoder = new Encoder(0,1);
     //Encoder rightEncoder = new Encoder(2,3);
     //leftEncoder.setDistancePerPulse(Math.PI * wheelDiameter / cpr);
@@ -96,7 +100,7 @@ public class Robot extends TimedRobot {
     rightFollower.follow(rightLeader);
     drive = new Drivetrain(leftLeader, leftFollower, rightLeader, rightFollower /*,leftEncoder, rightEncoder*/);
 
-    WPI_VictorSPX conveyorMotor = new WPI_VictorSPX(2);//
+    WPI_VictorSPX conveyorMotor = new WPI_VictorSPX(2);
     //TimeOfFlight ballSensor = new TimeOfFlight(0);
     DoubleSolenoid hardStop = new DoubleSolenoid(2, 3);
     conveyor = new Conveyor(conveyorMotor, hardStop, .25);
@@ -108,17 +112,18 @@ public class Robot extends TimedRobot {
     input = new OI(drive, operator);
     intake = new Intake(intakeMotor);
     //Vision
-    vision = new VisionCamera("SmartDashboard", "VisionCamera");
+
+    vision = new VisionCamera("Chameleon-vision", "VisionCamera");
     vision.connect();
     //Shooter
     trajectory = new Trajectory(35.0, .19, 5);
-    leftShooter = new WPI_TalonSRX(3);
-    rightShooter = new WPI_TalonSRX(2);
+    leftShooter = new WPI_TalonSRX(1); // Change data cable 
+    rightShooter = new WPI_TalonSRX(2);  //
     shooter = new Shooter(leftShooter, rightShooter,1);
     
     ///Climber 
-    WPI_VictorSPX climbingArm = new WPI_VictorSPX(0);//
-    WPI_VictorSPX winch = new WPI_VictorSPX(3); //
+    WPI_VictorSPX climbingArm = new WPI_VictorSPX(0); //
+    WPI_VictorSPX winch = new WPI_VictorSPX(4); //
     DoubleSolenoid hook = new DoubleSolenoid(0, 1);
     climber = new Climber(climbingArm,hook, winch);
     // Auto
@@ -218,7 +223,7 @@ public class Robot extends TimedRobot {
     }
     //Shooter
     if(input.driver.getRawButton(5)){
-      shooter.setVelocity(trajectory.getVeloctiy(vision.getDistance()));
+      shooter.setVelocity(trajectory.getVeloctiy(4));
       SmartDashboard.putBoolean("Is Shooter ready", shooter.isReady());
       if(shooter.isReady()){
         conveyor.hardStopDown();
@@ -229,6 +234,9 @@ public class Robot extends TimedRobot {
     }else{
 
       shooter.off();
+    }
+    if(input.driver.getRawButton(6)){
+      test.command();
     }
     //Conyevor 
     if(input.operator.getRawButton(3)){
