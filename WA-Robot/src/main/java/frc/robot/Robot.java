@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
   private PlayGenerator forwardAuto = new PlayGenerator("forwardAuto");
   private PlayGenerator rightAuto = new PlayGenerator("rightAuto");
   private PlayGenerator leftAuto = new PlayGenerator("leftAuto");
-  FollowVision test = new FollowVision(drive, vision, 3);
+  //FollowVision test = new FollowVision(drive, vision, 3);
 
   @Override
   public void robotInit() {
@@ -223,20 +223,24 @@ public class Robot extends TimedRobot {
     }
     //Shooter
     if(input.driver.getRawButton(5)){
-      shooter.setVelocity(trajectory.getVeloctiy(4));
+    
+      shooter.setVelocity(200);
+      //System.out.println(trajectory.getVeloctiy(14));
       SmartDashboard.putBoolean("Is Shooter ready", shooter.isReady());
       if(shooter.isReady()){
         conveyor.hardStopDown();
         conveyor.on();
         System.out.println("FIRE!");
       }
-
+    
     }else{
-
+    
       shooter.off();
     }
     if(input.driver.getRawButton(6)){
-      test.command();
+      shooter.sendIt();
+    }else{
+      shooter.off();
     }
     //Conyevor 
     if(input.operator.getRawButton(3)){
