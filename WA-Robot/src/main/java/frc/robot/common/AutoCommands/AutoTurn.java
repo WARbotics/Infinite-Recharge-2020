@@ -19,7 +19,8 @@ public class AutoTurn extends AutoCommand{
     */
     private AHRS ahrsDevice;
     private Drivetrain drive;
-    private PID PID = new PID(0.10, 0.00, 0.0);
+    //Setting these to some common values for now. See how this works and tweak if needed. https://en.wikipedia.org/wiki/PID_controller#Ziegler%E2%80%93Nichols_method
+    private PID PID = new PID(0.60, 1.2, 3.0, .02); //Everything but the dt value here will require tweaking. The wikipedia page on PID loops has some common constant values used for these terms.
 
     private double angle = 0.0;
     private double ROBOT_RADIUS = 3.1415926; //Turning radius of the robot that will need to change based on the measured radius of the robot
@@ -46,12 +47,12 @@ public class AutoTurn extends AutoCommand{
         //records the angle the robot has to travel without any process on the angle
         double angleDiff = Math.abs(angle - realAngle);
         //If the robot has a shorter distance to travel
-        if (angleDiff > 180) {
+        if (angleDiff > 180) { //should be less than 180?
             //Choose the shorter way(angle)
             angleDiff = 360 - angleDiff;
             //Should the robot turn right or left
             if (angle < realAngle) {
-                goRight = true;
+                goRight = true; //I expected this to be left. Not sure.
             } else {
                 goLeft = true;
             }
@@ -64,6 +65,7 @@ public class AutoTurn extends AutoCommand{
         }
         
         SmartDashboard.putNumber("Turn Input for straight driving", PID.getRate());
+
         if (goLeft) {
         //if expected angle is bigger than the real angle (0<=real<=90 && 270<=actual<=360)
         //make them both 90<=both<=270 (both at opposite sides of the circle)
