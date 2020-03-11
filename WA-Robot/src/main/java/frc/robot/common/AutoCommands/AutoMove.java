@@ -20,7 +20,7 @@ public class AutoMove extends AutoCommand{
     private Drivetrain drive;
     public double speed = 0.0;
     public double setPoint = 0.0;
-    private PID PID = new PID(0.1, 0.00, 0.00);
+    private PID PID = new PID(0.25, 0.00, 0.00);
     
     public AutoMove(Drivetrain drive, double time, double setPoint){
         super("AutoMove", time);
@@ -35,7 +35,7 @@ public class AutoMove extends AutoCommand{
 
     public void command(){
         PID.setPoint(setPoint);
-        //PID.setActual(drive.getDistance());
+        PID.setActual(drive.getDistance());
         drive.drive.arcadeDrive(PID.getRate(), 0);
 
         

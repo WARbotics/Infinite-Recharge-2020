@@ -20,7 +20,7 @@ public class Conveyor{
     
 
     private final WPI_VictorSPX motor;
-    //private TimeOfFlight ballSensor;
+    private TimeOfFlight ballSensor;
     private double threshold = 0;
     private DoubleSolenoid hardStop;
     public Conveyor(WPI_VictorSPX motor, DoubleSolenoid hardStop, double threshold){
@@ -28,14 +28,14 @@ public class Conveyor{
         this.threshold = threshold; 
         this.hardStop = hardStop;
     }
-    /*
+    
     public Conveyor(WPI_VictorSPX motor, DoubleSolenoid hardStop, TimeOfFlight ballSensor, double threshold){
         this.motor = motor;
         this.ballSensor = ballSensor;
         this.threshold = threshold;
         this.hardStop = hardStop;
      } 
-     */
+
 
     
     public enum ConveyorMode {
@@ -75,7 +75,7 @@ public class Conveyor{
         hardStop.set(DoubleSolenoid.Value.kReverse);
     }
     
-    /*
+
     public void ballDist(){
         ballSensor.getRange();
     }
@@ -87,6 +87,5 @@ public class Conveyor{
         return false;
     
     }
-    */
     
 }

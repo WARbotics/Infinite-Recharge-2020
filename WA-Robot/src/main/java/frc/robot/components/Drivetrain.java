@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.Encoder;
 
 public class Drivetrain {
     //Encoder
-    //private Encoder leftEncoder;
-    //private Encoder rightEncoder;
+    private Encoder leftEncoder;
+    private Encoder rightEncoder;
     //Motors 
     private WPI_TalonSRX _leftLeader;
     private WPI_VictorSPX _leftFollower;
@@ -27,7 +27,7 @@ public class Drivetrain {
     private double rotation = 0;
 
     public Drivetrain(WPI_TalonSRX leftLeadTalonSRX, WPI_VictorSPX leftFollowSPX, WPI_TalonSRX rightLeadSRX,
-            WPI_VictorSPX rightFollowSPX/*, Encoder leftEncoder, Encoder rightEncoder*/) {
+            WPI_VictorSPX rightFollowSPX, Encoder leftEncoder, Encoder rightEncoder) {
         this._leftLeader = leftLeadTalonSRX;
         this._leftFollower = leftFollowSPX;
         this.left = new SpeedControllerGroup(_leftLeader, _leftFollower);
@@ -37,8 +37,8 @@ public class Drivetrain {
         this.right = new SpeedControllerGroup(_rightLeader, _rightFollower);
         this.drive = new DifferentialDrive(left, right);
 
-        //this.leftEncoder = leftEncoder;
-        //this.rightEncoder = rightEncoder;
+        this.leftEncoder = leftEncoder;
+        this.rightEncoder = rightEncoder;
 
     }
 
@@ -67,10 +67,10 @@ public class Drivetrain {
         PID.setActual(this.speed);
         drive.curvatureDrive(PID.getRate(), this.rotation, isQuickTurn);
     }
-    /*
+    
     public double getDistance(){
         // Returns the average distance between both encoders and this should only be used for known driving forward
         return (leftEncoder.getDistance() + rightEncoder.getDistance())/2;
     }
-    */
+
 }
