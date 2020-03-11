@@ -16,10 +16,12 @@ public class PlayGenerator{
     private String name; 
     private Timer timer = new Timer();
     private ArrayList<AutoCommand> commands = new ArrayList<AutoCommand>();
+    //once the command is passed in, the command is stored in a queue
     public PlayGenerator(String name){
         plays.add(name);
         this.name = name;
     }
+
     public boolean run(){
         // Runs through each command for its set amount of time
         if(iteration == commands.size()){
@@ -37,9 +39,13 @@ public class PlayGenerator{
     public String getName(){
         return name;
     }
+
+    //getter method for the queue for commands
     public static ArrayList<String> getPlays(){
         return plays;
     }
+
+    //add commands and their run time in a queue
     public void addPlay(AutoCommand command){
         commands.add(command);
     }
