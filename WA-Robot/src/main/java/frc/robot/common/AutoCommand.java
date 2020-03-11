@@ -17,10 +17,11 @@ public abstract class AutoCommand{
     public abstract void init();
 
     public abstract void command();
-
+    //get the time variable for the command to run
     public double getTime(){
         return time;
     } 
+    //get the name of the command
     public String getName(){
         return name;
     }
